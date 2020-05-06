@@ -1,10 +1,15 @@
 # Spaceinvaders
 
-## Embed Images
-
-Using https://github.com/rakyll/statik
+## Once
 
 ```
 go get github.com/rakyll/statik
+```
+
+## Build
+
+```
 statik -src=img -include=*.png
+go build ./cmd/spaceinvaders/
+./cmd/spaceinvaders
 ```

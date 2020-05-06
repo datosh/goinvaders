@@ -5,6 +5,9 @@ import (
 	"log"
 	"net/http"
 
+	// Import to be embedded images
+	_ "spaceinvaders/statik"
+
 	"github.com/hajimehoshi/ebiten"
 	"github.com/rakyll/statik/fs"
 )
