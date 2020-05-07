@@ -20,6 +20,12 @@ func (g *Game) Update(screen *ebiten.Image) error {
 	for _, enemy := range g.enemies {
 		enemy.Update(screen)
 	}
+	g.enemies = Filter(g.enemies, isAlive).([]*Enemy)
+
+	for _, projectile := range g.projectiles {
+		projectile.Update(screen)
+	}
+	g.projectiles = Filter(g.projectiles, isAlive).([]*Projectile)
 
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
 		if !g.fireCooldown {
@@ -37,10 +43,6 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		}
 	}
 
-	for _, projectile := range g.projectiles {
-		projectile.Update(screen)
-	}
-
 	return nil
 }
 
@@ -55,6 +57,15 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	for _, projectile := range g.projectiles {
 		projectile.Draw(screen)
+	}
+
+	for _, enemy := range g.enemies {
+		for _, projectile := range g.projectiles {
+			if DoCollide(enemy.Bounds(), projectile.Bounds()) {
+				enemy.alive = false
+				projectile.alive = false
+			}
+		}
 	}
 
 }
