@@ -1,15 +1,2 @@
 # Spaceinvaders
 
-## Once
-
-```
-go get github.com/rakyll/statik
-```
-
-## Build
-
-```
-statik -src=img -include=*.png
-go build ./cmd/spaceinvaders/
-./cmd/spaceinvaders
-```
