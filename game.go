@@ -12,17 +12,20 @@ type Game struct {
 	enemies      []*Enemy
 	projectiles  []*Projectile
 	fireCooldown bool
-	moveTimer    time.Time
-	moveEach     time.Duration
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		g.player.MoveRelative(-1*g.player.speed, 0)
+	g.player.Update(screen)
+
+	for _, enemy := range g.enemies {
+		enemy.Update(screen)
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		g.player.MoveRelative(1*g.player.speed, 0)
+	g.enemies = Filter(g.enemies, isAlive).([]*Enemy)
+
+	for _, projectile := range g.projectiles {
+		projectile.Update(screen)
 	}
+	g.projectiles = Filter(g.projectiles, isAlive).([]*Projectile)
 
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
 		if !g.fireCooldown {
@@ -31,24 +34,13 @@ func (g *Game) Update(screen *ebiten.Image) error {
 				NewProjectile(g.player.x+24, g.player.y-5),
 			)
 
-			t := time.NewTimer(time.Second)
+			t := time.NewTimer(time.Second / 3)
 			g.fireCooldown = true
 			go func() {
 				<-t.C
 				g.fireCooldown = false
 			}()
 		}
-	}
-
-	for _, projectile := range g.projectiles {
-		projectile.Update(screen)
-	}
-
-	if g.moveTimer.Add(g.moveEach).Before(time.Now()) {
-		for _, enemy := range g.enemies {
-			enemy.MoveRelative(10, 0)
-		}
-		g.moveTimer = time.Now()
 	}
 
 	return nil
@@ -67,6 +59,15 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		projectile.Draw(screen)
 	}
 
+	for _, enemy := range g.enemies {
+		for _, projectile := range g.projectiles {
+			if DoCollide(enemy.Bounds(), projectile.Bounds()) {
+				enemy.alive = false
+				projectile.alive = false
+			}
+		}
+	}
+
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -76,8 +77,6 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func NewGame() *Game {
 	game := &Game{
 		player:       NewPlayer(),
-		moveTimer:    time.Now(),
-		moveEach:     time.Second,
 		fireCooldown: false,
 	}
 

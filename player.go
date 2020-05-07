@@ -1,34 +1,31 @@
 package spaceinvaders
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"github.com/hajimehoshi/ebiten"
+)
 
 type Player struct {
-	img   *ebiten.Image
-	x, y  float64
-	scale float64
-	speed float64
+	*Sprite
 }
 
 func NewPlayer() *Player {
 	player := &Player{
-		x:     300,
-		y:     440,
-		scale: 1,
-		speed: 2,
+		Sprite: NewSprite("/canon.png"),
 	}
-	player.img = LoadImage("/canon.png")
+	player.speed = 4
+	player.x = 300
+	player.y = 440
 
 	return player
 }
 
-func (p *Player) MoveRelative(x, y float64) {
-	p.x += x
-	p.y += y
-}
+func (p *Player) Update(screen *ebiten.Image) error {
+	if ebiten.IsKeyPressed(ebiten.KeyA) {
+		p.MoveRelative(-1*p.speed, 0)
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyD) {
+		p.MoveRelative(1*p.speed, 0)
+	}
 
-func (p *Player) Draw(screen *ebiten.Image) {
-	options := &ebiten.DrawImageOptions{}
-	options.GeoM.Scale(p.scale, p.scale)
-	options.GeoM.Translate(p.x, p.y)
-	screen.DrawImage(p.img, options)
+	return nil
 }
