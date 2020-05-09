@@ -16,11 +16,11 @@ func NewPlayer() *Player {
 	}
 	player.LoadImage(
 		"/spritemap.png",
-		TranslateBounds(vec2.Vec2I{64, 48}, vec2.Vec2I{0, 3}),
+		TranslateBounds(vec2.Vec2I{64, 48}, vec2.Vec2I{2, 3}),
 	)
 	player.speed = 4
-	player.x = 300
-	player.y = 440
+	player.x = 320
+	player.y = 420
 
 	return player
 }

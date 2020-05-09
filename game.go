@@ -13,6 +13,7 @@ type Game struct {
 	player       *Player
 	enemies      []*Enemy
 	projectiles  []*Projectile
+	stars        []*Star
 	fireCooldown bool
 }
 
@@ -28,6 +29,10 @@ func (g *Game) Update(screen *ebiten.Image) error {
 		projectile.Update(screen)
 	}
 	g.projectiles = Filter(g.projectiles, isAlive).([]*Projectile)
+
+	for _, star := range g.stars {
+		star.Update(screen)
+	}
 
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
 		if !g.fireCooldown {
@@ -52,6 +57,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{21, 12, 37, 255})
 
 	g.player.Draw(screen)
+
+	for _, star := range g.stars {
+		star.Draw(screen)
+	}
 
 	for _, enemy := range g.enemies {
 		enemy.Draw(screen)
@@ -89,6 +98,21 @@ func NewGame() *Game {
 	game.enemies = append(game.enemies, NewEnemy(20, 20, NewEnemy1Animation()))
 	game.enemies = append(game.enemies, NewEnemy(120, 20, NewEnemy2Animation()))
 	game.enemies = append(game.enemies, NewEnemy(220, 20, NewEnemy1Animation()))
+
+	game.stars = append(game.stars, NewStar(50, 150, NewStarAnimation(time.Millisecond*50)))
+	game.stars = append(game.stars, NewStar(150, 150, NewStarAnimation(time.Millisecond*150)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*250)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*350)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*450)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*550)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*650)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*650)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*650)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*650)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*650)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*650)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*650)))
+	game.stars = append(game.stars, NewStar(250, 150, NewStarAnimation(time.Millisecond*750)))
 
 	return game
 }
