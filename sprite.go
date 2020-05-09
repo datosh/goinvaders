@@ -57,7 +57,13 @@ func (s *Sprite) Draw(screen *ebiten.Image) {
 
 func (s *Sprite) Bounds() Rect {
 	max := s.img.Bounds().Max
-	return Rect{s.x, s.y, float64(max.X), float64(max.Y)}
+	min := s.img.Bounds().Min
+	return Rect{
+		s.x,
+		s.y,
+		((float64(max.X) - float64(min.X)) * s.scale),
+		((float64(max.Y) - float64(min.Y)) * s.scale),
+	}
 }
 
 func (s *Sprite) Dead() bool {

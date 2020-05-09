@@ -19,8 +19,9 @@ func NewPlayer() *Player {
 		TranslateBounds(vec2.Vec2I{64, 48}, vec2.Vec2I{2, 3}),
 	)
 	player.speed = 4
-	player.x = 320
+	player.x = 255
 	player.y = 420
+	player.scale = 1.2
 
 	return player
 }

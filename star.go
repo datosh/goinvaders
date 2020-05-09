@@ -17,8 +17,9 @@ type Star struct {
 	animation *Animation
 }
 
-func NewStarAnimation(initialDelay time.Duration) *Animation {
+func NewStarAnimation() *Animation {
 
+	thisAnimationDuration := time.Duration(starAnimationDuration + time.Duration(rand.Float64())*time.Millisecond*100)
 	return NewAnimation(
 		"/Stern.png",
 		vec2.Vec2I{32, 32},
@@ -27,23 +28,22 @@ func NewStarAnimation(initialDelay time.Duration) *Animation {
 			{0, 1}, {1, 1},
 		},
 		[]time.Duration{
-			starAnimationDuration + initialDelay, starAnimationDuration, starAnimationDuration,
-			starAnimationDuration, starAnimationDuration,
+			thisAnimationDuration, thisAnimationDuration, thisAnimationDuration,
+			thisAnimationDuration, thisAnimationDuration,
 		},
 	)
 }
 
-func NewStar(x, y float64, animation *Animation) *Star {
+func NewStar(animation *Animation) *Star {
 	star := &Star{
 		Sprite: NewSprite(),
 	}
 	star.animation = animation
 	star.img = star.animation.CurrentImage()
-	star.x = x
-	star.y = y
+	ChangeStarLocation(star)
 
 	go func() {
-		for range time.Tick((starAnimationDuration * 5) + time.Duration(int(rand.Float64()*520))*time.Millisecond) {
+		for range time.Tick((starAnimationDuration * 5) + time.Duration(rand.Float64())*time.Millisecond*1520) {
 			ChangeStarLocation(star)
 		}
 	}()
