@@ -1,6 +1,8 @@
 package spaceinvaders
 
 import (
+	"spaceinvaders/vec2"
+
 	"github.com/hajimehoshi/ebiten"
 )
 
@@ -10,8 +12,12 @@ type Player struct {
 
 func NewPlayer() *Player {
 	player := &Player{
-		Sprite: NewSprite("/canon.png"),
+		Sprite: NewSprite(),
 	}
+	player.LoadImage(
+		"/spritemap.png",
+		TranslateBounds(vec2.Vec2I{64, 48}, vec2.Vec2I{0, 3}),
+	)
 	player.speed = 4
 	player.x = 300
 	player.y = 440
