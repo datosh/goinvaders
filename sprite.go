@@ -1,7 +1,9 @@
 package spaceinvaders
 
 import (
+	"image"
 	"reflect"
+	"spaceinvaders/vec2"
 
 	"github.com/hajimehoshi/ebiten"
 )
@@ -19,9 +21,8 @@ type Sprite struct {
 	alive bool
 }
 
-func NewSprite(path string) *Sprite {
+func NewSprite() *Sprite {
 	sprite := &Sprite{
-		img:   LoadImage(path),
 		x:     0,
 		y:     0,
 		scale: 1,
@@ -29,6 +30,17 @@ func NewSprite(path string) *Sprite {
 		alive: true,
 	}
 	return sprite
+}
+
+func TranslateBounds(tileSize vec2.Vec2I, coordinates vec2.Vec2I) image.Rectangle {
+	return image.Rectangle{
+		image.Point{coordinates.X * tileSize.X, coordinates.Y * tileSize.Y},
+		image.Point{(coordinates.X + 1) * tileSize.X, (coordinates.Y + 1) * tileSize.Y},
+	}
+}
+
+func (s *Sprite) LoadImage(path string, bounds image.Rectangle) {
+	s.img = LoadImage(path).SubImage(bounds).(*ebiten.Image)
 }
 
 func (s *Sprite) MoveRelative(x, y float64) {

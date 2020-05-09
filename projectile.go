@@ -1,6 +1,10 @@
 package spaceinvaders
 
-import "github.com/hajimehoshi/ebiten"
+import (
+	"spaceinvaders/vec2"
+
+	"github.com/hajimehoshi/ebiten"
+)
 
 type Projectile struct {
 	*Sprite
@@ -8,11 +12,16 @@ type Projectile struct {
 
 func NewProjectile(x, y float64) *Projectile {
 	projectile := &Projectile{
-		Sprite: NewSprite("/projectile.png"),
+		Sprite: NewSprite(),
 	}
+	projectile.LoadImage(
+		"/spritemap.png",
+		TranslateBounds(vec2.Vec2I{64, 48}, vec2.Vec2I{2, 2}),
+	)
 	projectile.x = x
 	projectile.y = y
 	projectile.speed = 5.0
+	projectile.scale = 0.25
 	return projectile
 }
 

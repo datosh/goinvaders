@@ -1,10 +1,12 @@
 package spaceinvaders
 
 import (
+	"fmt"
 	"image/color"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/ebitenutil"
 )
 
 type Game struct {
@@ -47,7 +49,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	screen.Fill(color.RGBA{83, 104, 138, 255})
+	screen.Fill(color.RGBA{21, 12, 37, 255})
 
 	g.player.Draw(screen)
 
@@ -68,6 +70,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
+	ebitenutil.DebugPrint(
+		screen,
+		fmt.Sprintf("FPS %f, TPS %f", ebiten.CurrentFPS(), ebiten.CurrentTPS()),
+	)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -80,9 +86,9 @@ func NewGame() *Game {
 		fireCooldown: false,
 	}
 
-	game.enemies = append(game.enemies, NewEnemy(20, 20, 1))
-	game.enemies = append(game.enemies, NewEnemy(120, 20, 2))
-	game.enemies = append(game.enemies, NewEnemy(220, 20, 1))
+	game.enemies = append(game.enemies, NewEnemy(20, 20, NewEnemy1Animation()))
+	game.enemies = append(game.enemies, NewEnemy(120, 20, NewEnemy2Animation()))
+	game.enemies = append(game.enemies, NewEnemy(220, 20, NewEnemy1Animation()))
 
 	return game
 }
