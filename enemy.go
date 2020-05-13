@@ -17,7 +17,7 @@ type Enemy struct {
 
 func NewEnemy1Animation() *Animation {
 	return NewAnimation(
-		"/spritemap.png",
+		LoadImage("/spritemap.png"),
 		vec2.Vec2I{64, 48},
 		[]vec2.Vec2I{{0, 0}, {1, 0}},
 		[]time.Duration{time.Millisecond * 750, time.Millisecond * 750},
@@ -26,7 +26,7 @@ func NewEnemy1Animation() *Animation {
 
 func NewEnemy2Animation() *Animation {
 	return NewAnimation(
-		"/spritemap.png",
+		LoadImage("/spritemap.png"),
 		vec2.Vec2I{64, 48},
 		[]vec2.Vec2I{{2, 0}, {3, 0}},
 		[]time.Duration{time.Millisecond * 750, time.Millisecond * 750},

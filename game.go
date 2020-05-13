@@ -1,8 +1,8 @@
 package spaceinvaders
 
 import (
+	"fmt"
 	"image/color"
-	"log"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
@@ -79,15 +79,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 
-	log.Println(len(g.enemies))
 	if len(g.enemies) == 0 {
 		ebitenutil.DebugPrintAt(screen, "WINNER WINNER CHICKEN DINNER", 640/2-100, 480/2)
 	}
 
-	// ebitenutil.DebugPrint(
-	// 	screen,
-	// 	fmt.Sprintf("FPS %f, TPS %f", ebiten.CurrentFPS(), ebiten.CurrentTPS()),
-	// )
+	ebitenutil.DebugPrint(
+		screen,
+		fmt.Sprintf("FPS %f, TPS %f", ebiten.CurrentFPS(), ebiten.CurrentTPS()),
+	)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
