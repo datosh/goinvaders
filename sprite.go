@@ -66,6 +66,10 @@ func (s *Sprite) Bounds() Rect {
 	}
 }
 
+func (s *Sprite) Die() {
+	s.alive = false
+}
+
 func (s *Sprite) Dead() bool {
 	return !s.alive
 }

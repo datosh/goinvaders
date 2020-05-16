@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/audio"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 )
 
@@ -15,6 +16,7 @@ type Game struct {
 	projectiles  []*Projectile
 	stars        []*Star
 	fireCooldown bool
+	pewPlayer    *audio.Player
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
@@ -36,6 +38,10 @@ func (g *Game) Update(screen *ebiten.Image) error {
 
 	if ebiten.IsKeyPressed(ebiten.KeySpace) {
 		if !g.fireCooldown {
+
+			g.pewPlayer.SetVolume(0.2)
+			g.pewPlayer.Rewind()
+			g.pewPlayer.Play()
 			g.projectiles = append(
 				g.projectiles,
 				NewProjectile(g.player.x+30, g.player.y-10),
@@ -73,8 +79,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, enemy := range g.enemies {
 		for _, projectile := range g.projectiles {
 			if DoCollide(enemy.Bounds(), projectile.Bounds()) {
-				enemy.alive = false
-				projectile.alive = false
+				enemy.Hit()
+				projectile.Die()
 			}
 		}
 	}
@@ -97,6 +103,7 @@ func NewGame() *Game {
 	game := &Game{
 		player:       NewPlayer(),
 		fireCooldown: false,
+		pewPlayer:    LoadAudioPlayer("/audio/pew.mp3"),
 	}
 
 	game.enemies = append(game.enemies, NewEnemy(20, 20, NewEnemy1Animation()))

@@ -15,7 +15,7 @@ func NewPlayer() *Player {
 		Sprite: NewSprite(),
 	}
 	player.LoadImage(
-		"/spritemap.png",
+		"/img/spritemap.png",
 		TranslateBounds(vec2.Vec2I{64, 48}, vec2.Vec2I{2, 3}),
 	)
 	player.speed = 4

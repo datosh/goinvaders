@@ -15,7 +15,7 @@ func NewProjectile(x, y float64) *Projectile {
 		Sprite: NewSprite(),
 	}
 	projectile.LoadImage(
-		"/spritemap.png",
+		"/img/spritemap.png",
 		TranslateBounds(vec2.Vec2I{64, 48}, vec2.Vec2I{2, 2}),
 	)
 	projectile.x = x

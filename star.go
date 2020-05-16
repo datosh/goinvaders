@@ -21,7 +21,7 @@ func NewStarAnimation() *Animation {
 
 	thisAnimationDuration := time.Duration(starAnimationDuration + time.Duration(rand.Float64())*time.Millisecond*100)
 	return NewAnimation(
-		LoadImage("/Stern.png"),
+		LoadImage("/img/Stern.png"),
 		vec2.Vec2I{32, 32},
 		[]vec2.Vec2I{
 			{0, 0}, {1, 0}, {2, 0},
