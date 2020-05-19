@@ -16,8 +16,8 @@ import (
 // Animation allows to set the transition times between all frames separately.
 type Animation struct {
 	spritesheet     *ebiten.Image
-	tileSize        vec2.Vec2I      // size of each tile on spritesheet
-	tiles           []vec2.Vec2I    // list of coordinates for tiles on spritesheet
+	tileSize        vec2.PointI     // size of each tile on spritesheet
+	tiles           []vec2.PointI   // list of coordinates for tiles on spritesheet
 	delays          []time.Duration // delay befor going to next frame
 	lastFrameChange time.Time
 	currentFrame    int  // index into `tiles` & `delays` of current frame
@@ -25,7 +25,7 @@ type Animation struct {
 }
 
 // NewAnimation builds a new animation from the provided parameters
-func NewAnimation(spritesheet *ebiten.Image, tileSize vec2.Vec2I, tiles []vec2.Vec2I, delays []time.Duration) *Animation {
+func NewAnimation(spritesheet *ebiten.Image, tileSize vec2.PointI, tiles []vec2.PointI, delays []time.Duration) *Animation {
 	if len(tiles) != len(delays) {
 		log.Printf("ERR: NewAnimation: tiles and delays need to be of same length.")
 		return nil
@@ -81,7 +81,7 @@ func (anim *Animation) Resume() {
 	anim.paused = false
 }
 
-func (anim *Animation) currentTile() vec2.Vec2I {
+func (anim *Animation) currentTile() vec2.PointI {
 	return anim.tiles[anim.currentFrame]
 }
 

@@ -11,25 +11,26 @@ import (
 )
 
 type Game struct {
-	player       *Player
-	enemies      []*Enemy
-	projectiles  []*Projectile
-	stars        []*Star
-	fireCooldown bool
-	pewPlayer    *audio.Player
+	player          *Player
+	enemyController *EnemyController
+	projectiles     []*Projectile
+	stars           []*Star
+	fireCooldown    bool
+	pewPlayer       *audio.Player
 }
 
 func (g *Game) Update(screen *ebiten.Image) error {
 	g.player.Update(screen)
 
-	for _, enemy := range g.enemies {
-		enemy.Update(screen)
-	}
-	g.enemies = Filter(g.enemies, isAlive).([]*Enemy)
-
+	g.enemyController.Update(screen)
 	for _, projectile := range g.projectiles {
 		projectile.Update(screen)
 	}
+
+	for _, projectile := range g.projectiles {
+		g.enemyController.CollideWith(projectile)
+	}
+
 	g.projectiles = Filter(g.projectiles, isAlive).([]*Projectile)
 
 	for _, star := range g.stars {
@@ -67,25 +68,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	g.player.Draw(screen)
-
-	for _, enemy := range g.enemies {
-		enemy.Draw(screen)
-	}
+	g.enemyController.Draw(screen)
 
 	for _, projectile := range g.projectiles {
 		projectile.Draw(screen)
 	}
 
-	for _, enemy := range g.enemies {
-		for _, projectile := range g.projectiles {
-			if DoCollide(enemy.Bounds(), projectile.Bounds()) {
-				enemy.Hit()
-				projectile.Die()
-			}
-		}
-	}
-
-	if len(g.enemies) == 0 {
+	if len(g.enemyController.Enemies) == 0 {
 		ebitenutil.DebugPrintAt(screen, "WINNER WINNER CHICKEN DINNER", 640/2-100, 480/2)
 	}
 
@@ -101,14 +90,11 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 
 func NewGame() *Game {
 	game := &Game{
-		player:       NewPlayer(),
-		fireCooldown: false,
-		pewPlayer:    LoadAudioPlayer("/audio/pew.mp3"),
+		player:          NewPlayer(),
+		enemyController: NewEnemyController(),
+		fireCooldown:    false,
+		pewPlayer:       LoadAudioPlayer("/audio/pew.mp3"),
 	}
-
-	game.enemies = append(game.enemies, NewEnemy(20, 20, NewEnemy1Animation()))
-	game.enemies = append(game.enemies, NewEnemy(120, 20, NewEnemy2Animation()))
-	game.enemies = append(game.enemies, NewEnemy(220, 20, NewEnemy1Animation()))
 
 	for i := 0; i < 15; i++ {
 		game.stars = append(game.stars, NewStar(NewStarAnimation()))

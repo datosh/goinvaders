@@ -21,8 +21,8 @@ type Enemy struct {
 func NewEnemy1Animation() *Animation {
 	return NewAnimation(
 		LoadImage("/img/spritemap.png"),
-		vec2.Vec2I{64, 48},
-		[]vec2.Vec2I{{0, 0}, {1, 0}},
+		vec2.PointI{X: 64, Y: 48},
+		[]vec2.PointI{{X: 0, Y: 0}, {X: 1, Y: 0}},
 		[]time.Duration{time.Millisecond * 750, time.Millisecond * 750},
 	)
 }
@@ -30,8 +30,8 @@ func NewEnemy1Animation() *Animation {
 func NewEnemy2Animation() *Animation {
 	return NewAnimation(
 		LoadImage("/img/spritemap.png"),
-		vec2.Vec2I{64, 48},
-		[]vec2.Vec2I{{2, 0}, {3, 0}},
+		vec2.PointI{X: 64, Y: 48},
+		[]vec2.PointI{{X: 2, Y: 0}, {X: 3, Y: 0}},
 		[]time.Duration{time.Millisecond * 750, time.Millisecond * 750},
 	)
 }

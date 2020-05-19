@@ -32,7 +32,7 @@ func NewSprite() *Sprite {
 	return sprite
 }
 
-func TranslateBounds(tileSize vec2.Vec2I, coordinates vec2.Vec2I) image.Rectangle {
+func TranslateBounds(tileSize vec2.PointI, coordinates vec2.PointI) image.Rectangle {
 	return image.Rectangle{
 		image.Point{coordinates.X * tileSize.X, coordinates.Y * tileSize.Y},
 		image.Point{(coordinates.X + 1) * tileSize.X, (coordinates.Y + 1) * tileSize.Y},
@@ -56,13 +56,12 @@ func (s *Sprite) Draw(screen *ebiten.Image) {
 }
 
 func (s *Sprite) Bounds() Rect {
-	max := s.img.Bounds().Max
-	min := s.img.Bounds().Min
+	width, height := s.img.Size()
 	return Rect{
-		s.x,
-		s.y,
-		((float64(max.X) - float64(min.X)) * s.scale),
-		((float64(max.Y) - float64(min.Y)) * s.scale),
+		x: s.x,
+		y: s.y,
+		w: float64(width) * s.scale,
+		h: float64(height) * s.scale,
 	}
 }
 

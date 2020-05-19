@@ -1,6 +1,7 @@
 package spaceinvaders
 
 import (
+	"image/color"
 	"spaceinvaders/vec2"
 
 	"github.com/hajimehoshi/ebiten"
@@ -16,7 +17,7 @@ func NewProjectile(x, y float64) *Projectile {
 	}
 	projectile.LoadImage(
 		"/img/spritemap.png",
-		TranslateBounds(vec2.Vec2I{64, 48}, vec2.Vec2I{2, 2}),
+		TranslateBounds(vec2.PointI{64, 48}, vec2.PointI{2, 2}),
 	)
 	projectile.x = x
 	projectile.y = y
@@ -29,4 +30,9 @@ func (p *Projectile) Update(screen *ebiten.Image) error {
 	p.y -= 1 * p.speed
 
 	return nil
+}
+
+func (p *Projectile) Draw(screen *ebiten.Image) {
+	p.Sprite.Draw(screen)
+	DrawAABB(screen, p.Bounds(), color.RGBA{0, 255, 0, 255})
 }

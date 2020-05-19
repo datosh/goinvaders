@@ -1,5 +1,19 @@
 # Spaceinvaders
 
+Controller
+
+
+Sprite
+* world_position (x, y)
+* hitbox
+** offset (rel world_position)
+** size
+* image (optional)
+** scale
+** offset (rel world_position)
+** size
+* 
+
 ## Android Port
 
 link:https://github.com/hajimehoshi/go-inovation[Working Android Example Repo]
