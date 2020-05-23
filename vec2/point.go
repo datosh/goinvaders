@@ -10,9 +10,10 @@ type PointI struct {
 	X, Y int
 }
 
-func (self *Point) Add(other Point) {
+func (self *Point) Add(other Point) *Point {
 	self.X += other.X
 	self.Y += other.Y
+	return self
 }
 
 func (self *Point) Sub(other Point) {

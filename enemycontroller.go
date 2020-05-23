@@ -2,6 +2,7 @@ package spaceinvaders
 
 import (
 	"image/color"
+	"spaceinvaders/vec2"
 
 	"github.com/hajimehoshi/ebiten"
 )
@@ -16,13 +17,13 @@ func NewEnemyController() *EnemyController {
 		WalkableArea: NewSprite(),
 	}
 
-	DrawAABB(ec.WalkableArea.img, Rect{
-		x: 20, y: 20, w: 200, h: 200,
-	}, color.RGBA{0, 255, 0, 255})
+	DrawAABB(ec.WalkableArea.image, *vec2.NewRect(
+		20, 20, 200, 200,
+	), color.RGBA{0, 255, 0, 255})
 
-	ec.AddEnemy(NewEnemy(20, 20, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(120, 20, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(220, 20, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(vec2.Point{20, 20}, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(vec2.Point{120, 20}, NewEnemy2Animation()))
+	ec.AddEnemy(NewEnemy(vec2.Point{220, 20}, NewEnemy1Animation()))
 
 	return ec
 }
@@ -33,7 +34,7 @@ func (ec *EnemyController) AddEnemy(enemy *Enemy) {
 
 func (ec *EnemyController) CollideWith(projectile *Projectile) {
 	for _, enemy := range ec.Enemies {
-		if DoCollide(enemy.Bounds(), projectile.Bounds()) {
+		if enemy.Hitbox().Intersects(projectile.Hitbox()) {
 			enemy.Hit()
 			projectile.Die()
 		}
@@ -52,7 +53,7 @@ func (ec *EnemyController) Update(screen *ebiten.Image) error {
 func (ec *EnemyController) Draw(screen *ebiten.Image) {
 	for _, enemy := range ec.Enemies {
 		enemy.Draw(screen)
-		DrawAABB(screen, enemy.Bounds(), color.RGBA{0, 255, 0, 255})
+		DrawAABB(screen, enemy.ImageBounds(), color.RGBA{0, 255, 0, 255})
 	}
 }
 

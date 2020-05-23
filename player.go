@@ -8,30 +8,30 @@ import (
 
 type Player struct {
 	*Sprite
+	speed float64
 }
 
 func NewPlayer() *Player {
 	player := &Player{
 		Sprite: NewSprite(),
 	}
-	player.LoadImage(
+	player.LoadSubImage(
 		"/img/spritemap.png",
-		TranslateBounds(vec2.PointI{64, 48}, vec2.PointI{2, 3}),
+		CoordinatesToBounds(vec2.PointI{64, 48}, vec2.PointI{2, 3}),
 	)
 	player.speed = 4
-	player.x = 255
-	player.y = 420
-	player.scale = 1.2
+	player.MoveTo(vec2.Point{255, 420})
+	player.imageScale = 1.2
 
 	return player
 }
 
 func (p *Player) Update(screen *ebiten.Image) error {
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		p.MoveRelative(-1*p.speed, 0)
+		p.MoveRelativeX(-1 * p.speed)
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		p.MoveRelative(1*p.speed, 0)
+		p.MoveRelativeX(1 * p.speed)
 	}
 
 	return nil

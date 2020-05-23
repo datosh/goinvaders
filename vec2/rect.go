@@ -6,6 +6,13 @@ type Rect struct {
 	Min, Max Point
 }
 
+func NewRect(x, y, w, h float64) *Rect {
+	return &Rect{
+		Min: Point{X: x, Y: y},
+		Max: Point{X: x + w, Y: y + h},
+	}
+}
+
 func (this *Rect) X() float64 {
 	return this.Min.X
 }

@@ -8,6 +8,7 @@ import (
 
 	// Import to be embedded images
 	_ "spaceinvaders/statik"
+	"spaceinvaders/vec2"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/audio"
@@ -24,14 +25,19 @@ var (
 	audioContext *audio.Context
 )
 
-func printFiles(path string, info os.FileInfo, err error) error {
+func init() {
+	initStatik()
+	initAudio()
+}
+
+func logFilePath(path string, info os.FileInfo, err error) error {
 	log.Println(path)
 	return nil
 }
 
-func init() {
-	initStatik()
-	initAudio()
+func listFiles() {
+	log.Println("Assets:")
+	fs.Walk(spritesFS, "/", logFilePath)
 }
 
 func initStatik() {
@@ -40,11 +46,7 @@ func initStatik() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-}
-
-func listFiles() {
-	log.Println("Assets:")
-	fs.Walk(spritesFS, "/", printFiles)
+	listFiles()
 }
 
 func initAudio() {
@@ -77,6 +79,20 @@ func LoadImage(path string) *ebiten.Image {
 		return nil
 	}
 	return img2
+}
+
+func LoadSubImage(path string, bounds image.Rectangle) *ebiten.Image {
+	img := LoadImage(path)
+	subImg := img.SubImage(bounds)
+	finalImg := subImg.(*ebiten.Image)
+	return finalImg
+}
+
+func CoordinatesToBounds(tileSize vec2.PointI, coordinates vec2.PointI) image.Rectangle {
+	return image.Rectangle{
+		image.Point{coordinates.X * tileSize.X, coordinates.Y * tileSize.Y},
+		image.Point{(coordinates.X + 1) * tileSize.X, (coordinates.Y + 1) * tileSize.Y},
+	}
 }
 
 func LoadAudioPlayer(path string) *audio.Player {

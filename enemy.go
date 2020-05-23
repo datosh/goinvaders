@@ -36,7 +36,7 @@ func NewEnemy2Animation() *Animation {
 	)
 }
 
-func NewEnemy(x, y float64, animation *Animation) *Enemy {
+func NewEnemy(position vec2.Point, animation *Animation) *Enemy {
 	enemy := &Enemy{
 		Sprite:       NewSprite(),
 		moveTimer:    time.Now(),
@@ -46,19 +46,18 @@ func NewEnemy(x, y float64, animation *Animation) *Enemy {
 		hitPoints:    3,
 	}
 	enemy.animation = animation
-	enemy.img = enemy.animation.CurrentImage()
-	enemy.x = x
-	enemy.y = y
+	enemy.image = enemy.animation.CurrentImage()
+	enemy.position = position
 	return enemy
 }
 
 func (e *Enemy) Update(screen *ebiten.Image) error {
 	if e.moveTimer.Add(e.moveEach).Before(time.Now()) {
-		e.MoveRelative(e.moveDistance, 0)
+		e.MoveRelativeX(e.moveDistance)
 		e.moveTimer = time.Now()
 	}
 	e.animation.Update(screen)
-	e.img = e.animation.CurrentImage()
+	e.image = e.animation.CurrentImage()
 	return nil
 }
 

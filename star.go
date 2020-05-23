@@ -39,7 +39,7 @@ func NewStar(animation *Animation) *Star {
 		Sprite: NewSprite(),
 	}
 	star.animation = animation
-	star.img = star.animation.CurrentImage()
+	star.image = star.animation.CurrentImage()
 	ChangeStarLocation(star)
 
 	go func() {
@@ -53,12 +53,14 @@ func NewStar(animation *Animation) *Star {
 
 func (e *Star) Update(screen *ebiten.Image) error {
 	e.animation.Update(screen)
-	e.img = e.animation.CurrentImage()
+	e.image = e.animation.CurrentImage()
 	return nil
 }
 
 func ChangeStarLocation(star *Star) {
 	time.Sleep(time.Duration(int(rand.Float64()*20)) * time.Millisecond)
-	star.x = rand.Float64() * 640
-	star.y = rand.Float64() * 480
+	star.MoveTo(vec2.Point{
+		X: rand.Float64() * 640,
+		Y: rand.Float64() * 480,
+	})
 }

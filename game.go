@@ -3,6 +3,7 @@ package spaceinvaders
 import (
 	"fmt"
 	"image/color"
+	"spaceinvaders/vec2"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
@@ -45,9 +46,8 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.pewPlayer.Play()
 			g.projectiles = append(
 				g.projectiles,
-				NewProjectile(g.player.x+30, g.player.y-10),
+				NewProjectile(*g.player.position.Add(vec2.Point{30.0, -10.0})),
 			)
-
 			t := time.NewTimer(time.Second / 3)
 			g.fireCooldown = true
 			go func() {
