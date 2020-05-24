@@ -56,6 +56,28 @@ func TestRect_Intersects(t *testing.T) {
 	})
 }
 
+func TestRect_Inside(t *testing.T) {
+	r1 := NewRect(10, 10, 10, 10)
+	r2 := NewRect(12, 12, 5, 5)
+	r3 := NewRect(15, 15, 10, 2)
+
+	t.Run("inside", func(t *testing.T) {
+		assert.True(t, r2.Inside(r1))
+	})
+
+	t.Run("same is also inside", func(t *testing.T) {
+		assert.True(t, r1.Inside(r1))
+	})
+
+	t.Run("full overlay", func(t *testing.T) {
+		assert.False(t, r1.Inside(r2))
+	})
+
+	t.Run("exit right", func(t *testing.T) {
+		assert.False(t, r3.Inside(r1))
+	})
+}
+
 func TestRect_FromImageRect(t *testing.T) {
 	imgRect := image.Rect(10, 10, 20, 20)
 	r := Rect{}

@@ -13,26 +13,31 @@ func NewRect(x, y, w, h float64) *Rect {
 	}
 }
 
-func (this *Rect) X() float64 {
-	return this.Min.X
+func (r *Rect) X() float64 {
+	return r.Min.X
 }
 
-func (this *Rect) Y() float64 {
-	return this.Min.Y
+func (r *Rect) Y() float64 {
+	return r.Min.Y
 }
 
-func (this *Rect) Width() float64 {
-	return this.Max.X - this.Min.X
+func (r *Rect) Width() float64 {
+	return r.Max.X - r.Min.X
 }
 
-func (this *Rect) Height() float64 {
-	return this.Max.Y - this.Min.Y
+func (r *Rect) Height() float64 {
+	return r.Max.Y - r.Min.Y
 }
 
-func (this *Rect) Intersects(other *Rect) bool {
+func (r *Rect) Intersects(other *Rect) bool {
 	// AABB collision test
-	return this.Min.X < other.Max.X && other.Min.X < this.Max.X &&
-		this.Min.Y < other.Max.Y && other.Min.Y < this.Max.Y
+	return r.Min.X < other.Max.X && other.Min.X < r.Max.X &&
+		r.Min.Y < other.Max.Y && other.Min.Y < r.Max.Y
+}
+
+func (r *Rect) Inside(other *Rect) bool {
+	return other.Min.X <= r.Min.X && r.Max.X <= other.Max.X &&
+		other.Min.Y <= r.Min.Y && r.Max.Y <= other.Max.Y
 }
 
 func (r *Rect) FromImageRect(from image.Rectangle) {

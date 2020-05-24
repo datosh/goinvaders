@@ -30,7 +30,7 @@ func NewEntity() *Entity {
 		HitboxSize:   nil,
 		HitboxOffset: nil,
 		Alive:        true,
-		Debug:        true,
+		Debug:        false,
 	}
 	return entity
 }
@@ -45,8 +45,7 @@ func (s *Entity) ImageRect() vec2.Rect {
 }
 
 func (s *Entity) Update(screen *ebiten.Image) error {
-	if ebiten.IsKeyPressed(ebiten.KeyD) &&
-		ebiten.IsKeyPressed(ebiten.KeyControl) {
+	if ebiten.IsKeyPressed(ebiten.KeyF10) {
 		s.ToggleDebug()
 	}
 	return nil
