@@ -21,7 +21,7 @@ type Animation struct {
 	delays          []time.Duration // delay befor going to next frame
 	lastFrameChange time.Time
 	currentFrame    int  // index into `tiles` & `delays` of current frame
-	paused          bool // holds animation
+	paused          bool // pauses animation
 }
 
 // NewAnimation builds a new animation from the provided parameters
@@ -50,24 +50,24 @@ func NewAnimation(spritesheet *ebiten.Image, tileSize vec2.I, tiles []vec2.I, de
 }
 
 // Update needs to be called regularly so that animation progresses.
-func (anim *Animation) Update(_ *ebiten.Image) {
+func (anim *Animation) Update(*ebiten.Image) {
 	if anim.paused {
 		return
 	}
 	if time.Now().After(anim.nextFrameChange()) {
 		anim.lastFrameChange = time.Now()
-		anim.currentFrame = (anim.currentFrame + 1) % len(anim.tiles)
+		anim.currentFrame = anim.nextFrame()
 	}
 }
 
 // CurrentImage returns image of animation that is ought to be displayed.
 func (anim *Animation) CurrentImage() *ebiten.Image {
-	sub := anim.spritesheet.SubImage(image.Rect(
-		anim.currentTile().X*anim.tileSize.X,
-		anim.currentTile().Y*anim.tileSize.Y,
-		(anim.currentTile().X+1)*anim.tileSize.X,
-		(anim.currentTile().Y+1)*anim.tileSize.Y)).(*ebiten.Image)
-	return sub
+	minX := anim.currentTile().X * anim.tileSize.X
+	minY := anim.currentTile().Y * anim.tileSize.Y
+	return anim.spritesheet.SubImage(image.Rect(
+		minX, minY,
+		minX+anim.tileSize.X, minY+anim.tileSize.Y),
+	).(*ebiten.Image)
 }
 
 // Pause going through single frames that make up animation.
@@ -91,4 +91,8 @@ func (anim *Animation) currentDelay() time.Duration {
 
 func (anim *Animation) nextFrameChange() time.Time {
 	return anim.lastFrameChange.Add(anim.currentDelay())
+}
+
+func (anim *Animation) nextFrame() int {
+	return (anim.currentFrame + 1) % len(anim.tiles)
 }
