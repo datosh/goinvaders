@@ -21,8 +21,8 @@ const (
 )
 
 var (
-	spritesFS    http.FileSystem
-	audioContext *audio.Context
+	assetFileSystem http.FileSystem
+	audioContext    *audio.Context
 )
 
 func init() {
@@ -37,12 +37,12 @@ func logFilePath(path string, info os.FileInfo, err error) error {
 
 func listFiles() {
 	log.Println("Assets:")
-	fs.Walk(spritesFS, "/", logFilePath)
+	fs.Walk(assetFileSystem, "/", logFilePath)
 }
 
 func initStatik() {
 	var err error
-	spritesFS, err = fs.New()
+	assetFileSystem, err = fs.New()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -57,8 +57,9 @@ func initAudio() {
 	}
 }
 
+// LoadImage from embedded (statik) filesystem.
 func LoadImage(path string) *ebiten.Image {
-	file, err := spritesFS.Open(path)
+	file, err := assetFileSystem.Open(path)
 	if err != nil {
 		log.Println(err)
 		return nil
@@ -81,13 +82,15 @@ func LoadImage(path string) *ebiten.Image {
 	return img2
 }
 
+// LoadSubImage uses `LoadImage` to load an image,
+// but only returns a sub image specified by bounds.
 func LoadSubImage(path string, bounds image.Rectangle) *ebiten.Image {
-	img := LoadImage(path)
-	subImg := img.SubImage(bounds)
-	finalImg := subImg.(*ebiten.Image)
-	return finalImg
+	return LoadImage(path).SubImage(bounds).(*ebiten.Image)
 }
 
+// CoordinatesToBounds creates the required bounds Rectangle for `LoadSubImage`
+// based on the size of the tiles, which make up a spritesheet, as well as the
+// location on the sprite sheet.
 func CoordinatesToBounds(tileSize vec2.I, coordinates vec2.I) image.Rectangle {
 	return image.Rectangle{
 		image.Point{coordinates.X * tileSize.X, coordinates.Y * tileSize.Y},
@@ -95,8 +98,10 @@ func CoordinatesToBounds(tileSize vec2.I, coordinates vec2.I) image.Rectangle {
 	}
 }
 
+// LoadAudioPlayer created a new audio player for the specified audio file,
+// which is loaded from embedded (statik) assets.
 func LoadAudioPlayer(path string) *audio.Player {
-	f, err := spritesFS.Open(path)
+	f, err := assetFileSystem.Open(path)
 	if err != nil {
 		log.Panicf("Error opening audio file: %v", err)
 		return nil
