@@ -1,7 +1,6 @@
 package spaceinvaders
 
 import (
-	"image/color"
 	"spaceinvaders/vec2"
 
 	"github.com/hajimehoshi/ebiten"
@@ -9,12 +8,12 @@ import (
 
 type EnemyController struct {
 	Enemies      []*Enemy
-	WalkableArea *Sprite
+	WalkableArea *Entity
 }
 
 func NewEnemyController() *EnemyController {
 	ec := &EnemyController{
-		WalkableArea: NewSprite(),
+		WalkableArea: NewEntity(),
 	}
 
 	ec.AddEnemy(NewEnemy(&vec2.T{20, 20}, NewEnemy1Animation()))
@@ -49,7 +48,6 @@ func (ec *EnemyController) Update(screen *ebiten.Image) error {
 func (ec *EnemyController) Draw(screen *ebiten.Image) {
 	for _, enemy := range ec.Enemies {
 		enemy.Draw(screen)
-		DrawAABB(screen, enemy.ImageRect(), color.RGBA{0, 255, 0, 255})
 	}
 }
 

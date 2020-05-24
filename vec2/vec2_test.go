@@ -112,6 +112,34 @@ func TestVec2(t *testing.T) {
 		assert.Equal(t, c.Y, 60.0)
 	})
 
+	t.Run("Invert", func(t *testing.T) {
+		a := &T{2, 20}
+
+		a.Invert()
+
+		assert.Equal(t, a.X, -2.0)
+		assert.Equal(t, a.Y, -20.0)
+	})
+
+	t.Run("Invert returns this", func(t *testing.T) {
+		a := &T{2, 20}
+
+		c := a.Invert()
+
+		assert.Same(t, c, a)
+	})
+
+	t.Run("Copy Invert", func(t *testing.T) {
+		a := &T{2, 20}
+
+		c := a.Inverted()
+
+		assert.Equal(t, a.X, 2.0)
+		assert.Equal(t, a.Y, 20.0)
+		assert.Equal(t, c.X, -2.0)
+		assert.Equal(t, c.Y, -20.0)
+	})
+
 	t.Run("Length of (1,1)=sqrt(2)", func(t *testing.T) {
 		a := &T{1, 1}
 

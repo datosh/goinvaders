@@ -7,7 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten"
 )
 
-func DrawAABB(img *ebiten.Image, bounds vec2.Rect, clr color.Color) {
+func DrawRect(img *ebiten.Image, bounds vec2.Rect, clr color.Color) {
 	rectImg, _ := ebiten.NewImage(
 		int(bounds.Width())+1,
 		int(bounds.Height())+1,

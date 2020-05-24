@@ -9,7 +9,7 @@ import (
 )
 
 type Enemy struct {
-	*Sprite
+	*Entity
 	moveTimer    time.Time
 	moveEach     time.Duration
 	moveDistance float64
@@ -38,7 +38,7 @@ func NewEnemy2Animation() *Animation {
 
 func NewEnemy(position *vec2.T, animation *Animation) *Enemy {
 	enemy := &Enemy{
-		Sprite:       NewSprite(),
+		Entity:       NewEntity(),
 		moveTimer:    time.Now(),
 		moveEach:     time.Millisecond * 750,
 		moveDistance: 20.0,
@@ -46,23 +46,26 @@ func NewEnemy(position *vec2.T, animation *Animation) *Enemy {
 		hitPoints:    3,
 	}
 	enemy.animation = animation
-	enemy.image = enemy.animation.CurrentImage()
-	enemy.position = position
+	enemy.Image = enemy.animation.CurrentImage()
+	enemy.Position = position
+	enemy.HitboxSize = vec2.NewI(enemy.Image.Size()).AsT()
+	enemy.HitboxOffset = vec2.New(1, 1)
 	return enemy
 }
 
 func (e *Enemy) Update(screen *ebiten.Image) error {
+	e.Entity.Update(screen)
 	if e.moveTimer.Add(e.moveEach).Before(time.Now()) {
-		e.MoveRelativeX(e.moveDistance)
+		e.Position.Add(vec2.UX().Mul(e.moveDistance))
 		e.moveTimer = time.Now()
 	}
 	e.animation.Update(screen)
-	e.image = e.animation.CurrentImage()
+	e.Image = e.animation.CurrentImage()
 	return nil
 }
 
 func (e *Enemy) Die() {
-	e.alive = false
+	e.Alive = false
 }
 
 func (e *Enemy) Hit() {

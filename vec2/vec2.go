@@ -24,6 +24,31 @@ func NewI(x, y int) *I {
 	return &I{X: x, Y: y}
 }
 
+// UX is unit vector where X=1
+func UX() *T {
+	return &T{1.0, 0.0}
+}
+
+// UY is unit vector where Y=1
+func UY() *T {
+	return &T{0.0, 1.0}
+}
+
+// UXY is unit vector where X=1 and Y=1
+func UXY() *T {
+	return &T{1.0, 1.0}
+}
+
+// Coords returns the single cooridnates of vector
+func (t *T) Coords() (float64, float64) {
+	return t.X, t.Y
+}
+
+func (t *T) Copy() *T {
+	p := *t
+	return &p
+}
+
 // Add other to receiver. Other is unchanged.
 // Receiver is returned for easy chaning.
 func (t *T) Add(other *T) *T {
@@ -64,6 +89,20 @@ func (t *T) Mul(scalar float64) *T {
 func (t *T) Muled(scalar float64) *T {
 	p := *t
 	return p.Mul(scalar)
+}
+
+// Invert vector.
+// Receiver is returned for easy chaning.
+func (t *T) Invert() *T {
+	t.X = -t.X
+	t.Y = -t.Y
+	return t
+}
+
+// Inverted returns a new *T which is receiver inverted.
+func (t *T) Inverted() *T {
+	p := *t
+	return p.Invert()
 }
 
 // Length returns length of receiver.

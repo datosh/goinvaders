@@ -13,7 +13,7 @@ const (
 )
 
 type Star struct {
-	*Sprite
+	*Entity
 	animation *Animation
 }
 
@@ -36,10 +36,10 @@ func NewStarAnimation() *Animation {
 
 func NewStar(animation *Animation) *Star {
 	star := &Star{
-		Sprite: NewSprite(),
+		Entity: NewEntity(),
 	}
 	star.animation = animation
-	star.image = star.animation.CurrentImage()
+	star.Image = star.animation.CurrentImage()
 	ChangeStarLocation(star)
 
 	go func() {
@@ -51,16 +51,17 @@ func NewStar(animation *Animation) *Star {
 	return star
 }
 
-func (e *Star) Update(screen *ebiten.Image) error {
-	e.animation.Update(screen)
-	e.image = e.animation.CurrentImage()
+func (s *Star) Update(screen *ebiten.Image) error {
+	s.Entity.Update(screen)
+	s.animation.Update(screen)
+	s.Image = s.animation.CurrentImage()
 	return nil
 }
 
 func ChangeStarLocation(star *Star) {
 	time.Sleep(time.Duration(int(rand.Float64()*20)) * time.Millisecond)
-	star.SetPosition(&vec2.T{
+	star.Position = &vec2.T{
 		X: rand.Float64() * 640,
 		Y: rand.Float64() * 480,
-	})
+	}
 }
