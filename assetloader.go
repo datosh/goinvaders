@@ -88,7 +88,7 @@ func LoadSubImage(path string, bounds image.Rectangle) *ebiten.Image {
 	return finalImg
 }
 
-func CoordinatesToBounds(tileSize vec2.PointI, coordinates vec2.PointI) image.Rectangle {
+func CoordinatesToBounds(tileSize vec2.I, coordinates vec2.I) image.Rectangle {
 	return image.Rectangle{
 		image.Point{coordinates.X * tileSize.X, coordinates.Y * tileSize.Y},
 		image.Point{(coordinates.X + 1) * tileSize.X, (coordinates.Y + 1) * tileSize.Y},

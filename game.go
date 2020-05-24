@@ -46,7 +46,7 @@ func (g *Game) Update(screen *ebiten.Image) error {
 			g.pewPlayer.Play()
 			g.projectiles = append(
 				g.projectiles,
-				NewProjectile(*g.player.position.Add(vec2.Point{30.0, -10.0})),
+				NewProjectile(g.player.position.Add(&vec2.T{30.0, -10.0})),
 			)
 			t := time.NewTimer(time.Second / 3)
 			g.fireCooldown = true

@@ -17,13 +17,9 @@ func NewEnemyController() *EnemyController {
 		WalkableArea: NewSprite(),
 	}
 
-	DrawAABB(ec.WalkableArea.image, *vec2.NewRect(
-		20, 20, 200, 200,
-	), color.RGBA{0, 255, 0, 255})
-
-	ec.AddEnemy(NewEnemy(vec2.Point{20, 20}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(vec2.Point{120, 20}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(vec2.Point{220, 20}, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{20, 20}, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{120, 20}, NewEnemy2Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{220, 20}, NewEnemy1Animation()))
 
 	return ec
 }
@@ -53,7 +49,7 @@ func (ec *EnemyController) Update(screen *ebiten.Image) error {
 func (ec *EnemyController) Draw(screen *ebiten.Image) {
 	for _, enemy := range ec.Enemies {
 		enemy.Draw(screen)
-		DrawAABB(screen, enemy.ImageBounds(), color.RGBA{0, 255, 0, 255})
+		DrawAABB(screen, enemy.ImageRect(), color.RGBA{0, 255, 0, 255})
 	}
 }
 

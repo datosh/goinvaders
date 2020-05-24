@@ -12,14 +12,14 @@ type Projectile struct {
 	speed float64
 }
 
-func NewProjectile(position vec2.Point) *Projectile {
+func NewProjectile(position *vec2.T) *Projectile {
 	projectile := &Projectile{
 		Sprite: NewSprite(),
 	}
-	projectile.LoadSubImage(
+	projectile.SetImage(LoadSubImage(
 		"/img/spritemap.png",
-		CoordinatesToBounds(vec2.PointI{64, 48}, vec2.PointI{2, 2}),
-	)
+		CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 2}),
+	))
 	projectile.position = position
 	projectile.speed = 5.0
 	projectile.imageScale = 0.25
@@ -33,5 +33,5 @@ func (p *Projectile) Update(screen *ebiten.Image) error {
 
 func (p *Projectile) Draw(screen *ebiten.Image) {
 	p.Sprite.Draw(screen)
-	DrawAABB(screen, p.ImageBounds(), color.RGBA{0, 255, 0, 255})
+	DrawAABB(screen, p.ImageRect(), color.RGBA{0, 255, 0, 255})
 }

@@ -18,8 +18,8 @@ func TestRect(t *testing.T) {
 	})
 
 	t.Run("New from points", func(t *testing.T) {
-		p1 := Point{10, 10}
-		p2 := Point{20, 20}
+		p1 := T{10, 10}
+		p2 := T{20, 20}
 		r := Rect{p1, p2}
 
 		assert.Equal(t, 10.0, r.X())

@@ -15,12 +15,12 @@ func NewPlayer() *Player {
 	player := &Player{
 		Sprite: NewSprite(),
 	}
-	player.LoadSubImage(
+	player.SetImage(LoadSubImage(
 		"/img/spritemap.png",
-		CoordinatesToBounds(vec2.PointI{64, 48}, vec2.PointI{2, 3}),
-	)
+		CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 3}),
+	))
 	player.speed = 4
-	player.MoveTo(vec2.Point{255, 420})
+	player.SetPosition(&vec2.T{255, 420})
 	player.imageScale = 1.2
 
 	return player

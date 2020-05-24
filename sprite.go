@@ -1,7 +1,6 @@
 package spaceinvaders
 
 import (
-	"image"
 	"image/color"
 	"reflect"
 	"spaceinvaders/vec2"
@@ -14,55 +13,49 @@ type Killable interface {
 }
 
 type Sprite struct {
-	position     vec2.Point    // position in the world
+	position     *vec2.T       // position in the world
 	image        *ebiten.Image // (optional) image to draw
-	imageOffset  vec2.Point    // draw image at offset relative to position
+	imageOffset  *vec2.T       // draw image at offset relative to position
 	imageScale   float64       // scale image before drawing
-	hitboxSize   *vec2.Point   // (optional) size of hitbox rel to position
-	hitboxOffset *vec2.Point   // (optional) offset of hitbox relative to position
+	hitboxSize   *vec2.T       // (optional) size of hitbox rel to position
+	hitboxOffset *vec2.T       // (optional) offset of hitbox relative to position
 	alive        bool          // dead or alive?
 	debug        bool          // debug mode
 }
 
 func NewSprite() *Sprite {
 	sprite := &Sprite{
-		position:     vec2.Point{X: 0.0, Y: 0.0},
+		position:     &vec2.T{X: 0.0, Y: 0.0},
 		image:        nil,
-		imageOffset:  vec2.Point{X: 0.0, Y: 0.0},
+		imageOffset:  &vec2.T{X: 0.0, Y: 0.0},
 		imageScale:   1.0,
 		hitboxSize:   nil,
 		hitboxOffset: nil,
 		alive:        true,
+		debug:        false,
 	}
 	return sprite
 }
 
-// TODO: Image loading should return errors
-func (s *Sprite) LoadImage(path string) {
-	s.image = LoadImage(path)
-}
-
-func (s *Sprite) LoadSubImage(path string, bounds image.Rectangle) {
-	img := LoadSubImage(path, bounds)
-	s.image = img
+func (s *Sprite) Image() *ebiten.Image {
+	return s.image
 }
 
 func (s *Sprite) SetImage(image *ebiten.Image) {
 	s.image = image
 }
 
-func (s *Sprite) ImageBounds() vec2.Rect {
-	width, height := s.image.Size()
-	return *vec2.NewRect(
-		s.position.X,
-		s.position.Y,
-		float64(width)*s.imageScale,
-		float64(height)*s.imageScale,
-	)
+func (s *Sprite) ImageRect() vec2.Rect {
+	dimensions := vec2.NewI(s.image.Size()).AsT()
+	return vec2.Rect{
+		Min: *s.position.Added(s.imageOffset),
+		Max: *s.position.Added(dimensions.Muled(s.imageScale)),
+	}
 }
 
 func (s *Sprite) Update(screen *ebiten.Image) error {
-	if ebiten.IsKeyPressed(ebiten.KeyD) && ebiten.IsKeyPressed(ebiten.KeyControl) {
+	if ebiten.IsKeyPressed(ebiten.KeyD) &&
+		ebiten.IsKeyPressed(ebiten.KeyControl) {
 		s.ToggleDebug()
 	}
 	return nil
@@ -80,10 +73,20 @@ func (s *Sprite) Draw(screen *ebiten.Image) {
 		if s.hitboxSize != nil {
 			DrawAABB(screen, *s.Hitbox(), color.RGBA{255, 0, 0, 255})
 		}
+
+		if s.image != nil {
+			DrawAABB(screen, s.ImageRect(), color.RGBA{0, 255, 0, 255})
+		}
+
+		DrawAABB(
+			screen,
+			*vec2.NewRect(s.position.X, s.position.Y, 2, 2),
+			color.RGBA{0, 0, 255, 255},
+		)
 	}
 }
 
-func (s *Sprite) MoveRelative(delta vec2.Point) {
+func (s *Sprite) MoveRelative(delta *vec2.T) {
 	s.position.Add(delta)
 }
 
@@ -95,29 +98,41 @@ func (s *Sprite) MoveRelativeY(deltaY float64) {
 	s.position.Y += deltaY
 }
 
-func (s *Sprite) MoveTo(newPosition vec2.Point) {
+func (s *Sprite) SetPosition(newPosition *vec2.T) {
 	s.position = newPosition
 }
 
-func (s *Sprite) HitboxSize() *vec2.Point {
+func (s *Sprite) HitboxSize() *vec2.T {
 	return s.hitboxSize
 }
 
-func (s *Sprite) SetHitboxSize(newSize *vec2.Point) {
+func (s *Sprite) SetHitboxSize(newSize *vec2.T) {
 	s.hitboxSize = newSize
 }
 
-func (s *Sprite) HitboxOffset() *vec2.Point {
+func (s *Sprite) HitboxOffset() *vec2.T {
 	return s.hitboxOffset
 }
 
+func (s *Sprite) SetHitboxOffset(newOffset *vec2.T) {
+	s.hitboxOffset = newOffset
+}
+
 func (s *Sprite) Hitbox() *vec2.Rect {
-	return vec2.NewRect(
-		s.position.X+s.hitboxOffset.X,
-		s.position.Y+s.hitboxOffset.X,
+	if s.hitboxSize == nil {
+		return nil
+	}
+	hitbox := vec2.NewRect(
+		s.position.X,
+		s.position.Y,
 		s.hitboxSize.X,
 		s.hitboxSize.Y,
 	)
+	if s.hitboxOffset != nil {
+		hitbox.Min.Add(s.hitboxOffset)
+		hitbox.Max.Add(s.hitboxOffset)
+	}
+	return hitbox
 }
 
 func (s *Sprite) Die() {
