@@ -14,8 +14,8 @@ type Entity struct {
 	Image        *ebiten.Image // (optional) image to draw
 	ImageOffset  *vec2.T       // draw image at offset relative to position
 	ImageScale   float64       // scale image before drawing
-	HitboxSize   *vec2.T       // (optional) size of hitbox rel to position
-	HitboxOffset *vec2.T       // (optional) offset of hitbox relative to position
+	HitboxSize   *vec2.T       // (optional) size of hitbox relative to position
+	HitboxOffset *vec2.T       // offset of hitbox relative to position
 	Alive        bool          // dead or alive?
 	Debug        bool          // debug mode
 }
@@ -28,7 +28,7 @@ func NewEntity() *Entity {
 		ImageOffset:  &vec2.T{X: 0.0, Y: 0.0},
 		ImageScale:   1.0,
 		HitboxSize:   nil,
-		HitboxOffset: nil,
+		HitboxOffset: &vec2.T{X: 0.0, Y: 0.0},
 		Alive:        true,
 		Debug:        false,
 	}
@@ -36,11 +36,12 @@ func NewEntity() *Entity {
 }
 
 // ImageRect builds destination rectangle of image in world
-func (s *Entity) ImageRect() vec2.Rect {
-	dimensions := vec2.NewI(s.Image.Size()).AsT()
+func (entity *Entity) ImageRect() vec2.Rect {
+	imageSize := vec2.NewI(entity.Image.Size()).AsT()
+	minPoint := entity.Position.Added(entity.ImageOffset)
 	return vec2.Rect{
-		Min: *s.Position.Added(s.ImageOffset),
-		Max: *s.Position.Added(s.ImageOffset).Added(dimensions.Muled(s.ImageScale)),
+		Min: minPoint,
+		Max: minPoint.Added(imageSize.Muled(entity.ImageScale)),
 	}
 }
 
@@ -82,15 +83,10 @@ func (s *Entity) Hitbox() *vec2.Rect {
 	if s.HitboxSize == nil {
 		return nil
 	}
-	hitbox := &vec2.Rect{
-		*s.Position,
-		*s.Position.Added(s.HitboxSize),
+	return &vec2.Rect{
+		Min: s.Position.Added(s.HitboxOffset),
+		Max: s.Position.Added(s.HitboxOffset).Add(s.HitboxSize),
 	}
-	if s.HitboxOffset != nil {
-		hitbox.Min.Add(s.HitboxOffset)
-		hitbox.Max.Add(s.HitboxOffset)
-	}
-	return hitbox
 }
 
 func (s *Entity) Die() {

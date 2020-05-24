@@ -26,21 +26,21 @@ func NewEnemyController() *EnemyController {
 		moveRight:       true,
 		changeDirection: false,
 	}
-	ec.HitboxSize = &vec2.T{570, 400}
-	ec.HitboxOffset = &vec2.T{25, 25}
+	ec.HitboxSize = &vec2.T{X: 570, Y: 400}
+	ec.HitboxOffset = &vec2.T{X: 25, Y: 25}
 	ec.Debug = false
 
-	ec.AddEnemy(NewEnemy(&vec2.T{020, 30}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{120, 30}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{220, 30}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{320, 30}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{420, 30}, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 020, Y: 30}, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 120, Y: 30}, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 220, Y: 30}, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 320, Y: 30}, NewEnemy1Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 420, Y: 30}, NewEnemy1Animation()))
 
-	ec.AddEnemy(NewEnemy(&vec2.T{020, 150}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{120, 150}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{220, 150}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{320, 150}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{420, 150}, NewEnemy2Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 020, Y: 150}, NewEnemy2Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 120, Y: 150}, NewEnemy2Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 220, Y: 150}, NewEnemy2Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 320, Y: 150}, NewEnemy2Animation()))
+	ec.AddEnemy(NewEnemy(&vec2.T{X: 420, Y: 150}, NewEnemy2Animation()))
 
 	return ec
 }

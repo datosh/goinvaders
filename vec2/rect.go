@@ -3,13 +3,13 @@ package vec2
 import "image"
 
 type Rect struct {
-	Min, Max T
+	Min, Max *T
 }
 
 func NewRect(x, y, w, h float64) *Rect {
 	return &Rect{
-		Min: T{X: x, Y: y},
-		Max: T{X: x + w, Y: y + h},
+		Min: &T{X: x, Y: y},
+		Max: &T{X: x + w, Y: y + h},
 	}
 }
 
@@ -42,7 +42,7 @@ func (r *Rect) Inside(other *Rect) bool {
 
 func (r *Rect) FromImageRect(from image.Rectangle) {
 	min := from.Min
-	r.Min = T{float64(min.X), float64(min.Y)}
+	r.Min = &T{float64(min.X), float64(min.Y)}
 	max := from.Max
-	r.Max = T{float64(max.X), float64(max.Y)}
+	r.Max = &T{float64(max.X), float64(max.Y)}
 }

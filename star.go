@@ -18,18 +18,14 @@ type Star struct {
 }
 
 func NewStarAnimation() *Animation {
-
-	thisAnimationDuration := time.Duration(starAnimationDuration + time.Duration(rand.Float64())*time.Millisecond*100)
 	return NewAnimation(
 		LoadImage("/img/Stern.png"),
 		vec2.I{32, 32},
 		[]vec2.I{
 			{0, 0}, {1, 0}, {2, 0},
-			{0, 1}, {1, 1},
 		},
 		[]time.Duration{
-			thisAnimationDuration, thisAnimationDuration, thisAnimationDuration,
-			thisAnimationDuration, thisAnimationDuration,
+			starAnimationDuration, starAnimationDuration, starAnimationDuration,
 		},
 	)
 }
@@ -43,7 +39,7 @@ func NewStar(animation *Animation) *Star {
 	ChangeStarLocation(star)
 
 	go func() {
-		for range time.Tick((starAnimationDuration * 5) + time.Duration(rand.Float64())*time.Millisecond*1520) {
+		for range time.Tick(starAnimationDuration * 5) {
 			ChangeStarLocation(star)
 		}
 	}()
@@ -59,9 +55,9 @@ func (s *Star) Update(screen *ebiten.Image) error {
 }
 
 func ChangeStarLocation(star *Star) {
-	time.Sleep(time.Duration(int(rand.Float64()*20)) * time.Millisecond)
-	star.Position = &vec2.T{
-		X: rand.Float64() * 640,
-		Y: rand.Float64() * 480,
-	}
+	windowWidth, windowHeight := ebiten.WindowSize()
+	star.Position = vec2.NewI(
+		rand.Intn(windowWidth),
+		rand.Intn(windowHeight),
+	).AsT()
 }
