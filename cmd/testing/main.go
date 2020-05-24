@@ -1,35 +1,17 @@
 package main
 
 import (
-	"flag"
+	"engine"
 	_ "image/png"
 	"log"
-	"os"
-	"runtime/pprof"
-	"spaceinvaders"
 
 	"github.com/hajimehoshi/ebiten"
 
-	_ "spaceinvaders/statik"
-	"spaceinvaders/vec2"
+	_ "engine/statik"
+	"engine/vec2"
 )
 
-var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to `file`")
-
 func main() {
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal("could not create CPU profile: ", err)
-		}
-		defer f.Close() // error handling omitted for example
-		if err := pprof.StartCPUProfile(f); err != nil {
-			log.Fatal("could not start CPU profile: ", err)
-		}
-		defer pprof.StopCPUProfile()
-	}
-
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Testing stuff!")
 	if err := ebiten.RunGame(NewGame()); err != nil {
@@ -55,16 +37,16 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 type Spaceship struct {
-	*spaceinvaders.Entity
+	*engine.Entity
 }
 
 func NewSpaceship() *Spaceship {
 	spaceship := &Spaceship{
-		Entity: spaceinvaders.NewEntity(),
+		Entity: engine.NewEntity(),
 	}
-	spaceship.Image = spaceinvaders.LoadSubImage(
+	spaceship.Image = engine.LoadSubImage(
 		"/img/spritemap.png",
-		spaceinvaders.CoordinatesToBounds(
+		engine.CoordinatesToBounds(
 			vec2.I{64, 48},
 			vec2.I{2, 3},
 		),

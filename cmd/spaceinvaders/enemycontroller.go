@@ -1,14 +1,15 @@
-package spaceinvaders
+package main
 
 import (
-	"spaceinvaders/vec2"
+	"engine"
+	"engine/vec2"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
 )
 
 type EnemyController struct {
-	*Entity
+	*engine.Entity
 	Enemies         []*Enemy
 	moveTimer       time.Time
 	moveEach        time.Duration
@@ -19,7 +20,7 @@ type EnemyController struct {
 
 func NewEnemyController() *EnemyController {
 	ec := &EnemyController{
-		Entity:          NewEntity(),
+		Entity:          engine.NewEntity(),
 		moveTimer:       time.Now(),
 		moveEach:        time.Millisecond * 500,
 		moveDistance:    20.0,
@@ -97,5 +98,14 @@ func (ec *EnemyController) Draw(screen *ebiten.Image) {
 }
 
 func (ec *EnemyController) RemoveDead() {
-	ec.Enemies = Filter(ec.Enemies, isAlive).([]*Enemy)
+	ec.Enemies = engine.Filter(ec.Enemies, isAlive).([]*Enemy)
+}
+
+type Killable interface {
+	Dead() bool
+}
+
+func isAlive(elem interface{}) bool {
+	entity := elem.(Killable)
+	return !entity.Dead()
 }

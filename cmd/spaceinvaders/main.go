@@ -3,17 +3,16 @@ package main
 import (
 	_ "image/png"
 	"log"
-	"spaceinvaders"
 
 	"github.com/hajimehoshi/ebiten"
 
-	_ "spaceinvaders/statik"
+	_ "engine/statik"
 )
 
 func main() {
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Spaceinvaders")
-	if err := ebiten.RunGame(spaceinvaders.NewGame()); err != nil {
+	if err := ebiten.RunGame(NewSpaceinvaders()); err != nil {
 		log.Fatal(err)
 	}
 }

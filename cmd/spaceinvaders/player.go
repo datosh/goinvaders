@@ -1,7 +1,8 @@
-package spaceinvaders
+package main
 
 import (
-	"spaceinvaders/vec2"
+	"engine"
+	"engine/vec2"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
@@ -9,7 +10,7 @@ import (
 )
 
 type Player struct {
-	*Entity
+	*engine.Entity
 	speed float64
 
 	projectiles    []*Projectile
@@ -20,16 +21,16 @@ type Player struct {
 
 func NewPlayer() *Player {
 	player := &Player{
-		Entity:         NewEntity(),
+		Entity:         engine.NewEntity(),
 		speed:          4,
 		fireOnCooldown: false,
 		fireCooldown:   time.Second / 3,
-		fireSound:      LoadAudioPlayer("/audio/pew.mp3"),
+		fireSound:      engine.LoadAudioPlayer("/audio/pew.mp3"),
 	}
 	player.fireSound.SetVolume(0.2)
-	player.Image = LoadSubImage(
+	player.Image = engine.LoadSubImage(
 		"/img/spritemap.png",
-		CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 3}),
+		engine.CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 3}),
 	)
 	player.Position = &vec2.T{255, 420}
 	player.ImageScale = 1.2
@@ -57,7 +58,7 @@ func (p *Player) Update(screen *ebiten.Image) error {
 		projectile.Update(screen)
 	}
 
-	p.projectiles = Filter(p.projectiles, isAlive).([]*Projectile)
+	p.projectiles = engine.Filter(p.projectiles, isAlive).([]*Projectile)
 
 	return nil
 }

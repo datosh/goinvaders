@@ -1,9 +1,9 @@
-package spaceinvaders
+package engine
 
 import (
+	"engine/vec2"
 	"image"
 	"log"
-	"spaceinvaders/vec2"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"

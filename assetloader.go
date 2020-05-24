@@ -1,4 +1,4 @@
-package spaceinvaders
+package engine
 
 import (
 	"image"
@@ -7,8 +7,8 @@ import (
 	"os"
 
 	// Import to be embedded images
-	_ "spaceinvaders/statik"
-	"spaceinvaders/vec2"
+	_ "engine/statik"
+	"engine/vec2"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/audio"

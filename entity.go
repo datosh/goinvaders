@@ -1,9 +1,9 @@
-package spaceinvaders
+package engine
 
 import (
+	"engine/vec2"
 	"image/color"
 	"reflect"
-	"spaceinvaders/vec2"
 
 	"github.com/hajimehoshi/ebiten"
 )
@@ -102,15 +102,6 @@ func (s *Entity) ToggleDebug() {
 }
 
 // TODO: Move this to some filter / container file
-type Killable interface {
-	Dead() bool
-}
-
-func isAlive(elem interface{}) bool {
-	entity := elem.(Killable)
-	return !entity.Dead()
-}
-
 func Filter(arr interface{}, cond func(interface{}) bool) interface{} {
 	contentType := reflect.TypeOf(arr)
 	contentValue := reflect.ValueOf(arr)

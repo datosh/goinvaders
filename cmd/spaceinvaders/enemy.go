@@ -1,7 +1,8 @@
-package spaceinvaders
+package main
 
 import (
-	"spaceinvaders/vec2"
+	"engine"
+	"engine/vec2"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
@@ -9,34 +10,34 @@ import (
 )
 
 type Enemy struct {
-	*Entity
-	animation *Animation
+	*engine.Entity
+	animation *engine.Animation
 	hitAudio  *audio.Player
 	hitPoints int
 }
 
-func NewEnemy1Animation() *Animation {
-	return NewAnimation(
-		LoadImage("/img/spritemap.png"),
+func NewEnemy1Animation() *engine.Animation {
+	return engine.NewAnimation(
+		engine.LoadImage("/img/spritemap.png"),
 		vec2.I{X: 64, Y: 48},
 		[]vec2.I{{X: 0, Y: 0}, {X: 1, Y: 0}},
 		[]time.Duration{time.Millisecond * 500, time.Millisecond * 500},
 	)
 }
 
-func NewEnemy2Animation() *Animation {
-	return NewAnimation(
-		LoadImage("/img/spritemap.png"),
+func NewEnemy2Animation() *engine.Animation {
+	return engine.NewAnimation(
+		engine.LoadImage("/img/spritemap.png"),
 		vec2.I{X: 64, Y: 48},
 		[]vec2.I{{X: 3, Y: 0}, {X: 2, Y: 0}},
 		[]time.Duration{time.Millisecond * 500, time.Millisecond * 500},
 	)
 }
 
-func NewEnemy(position *vec2.T, animation *Animation) *Enemy {
+func NewEnemy(position *vec2.T, animation *engine.Animation) *Enemy {
 	enemy := &Enemy{
-		Entity:    NewEntity(),
-		hitAudio:  LoadAudioPlayer("/audio/au.mp3"),
+		Entity:    engine.NewEntity(),
+		hitAudio:  engine.LoadAudioPlayer("/audio/au.mp3"),
 		hitPoints: 3,
 	}
 	enemy.animation = animation

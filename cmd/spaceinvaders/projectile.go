@@ -1,23 +1,24 @@
-package spaceinvaders
+package main
 
 import (
-	"spaceinvaders/vec2"
+	"engine"
+	"engine/vec2"
 
 	"github.com/hajimehoshi/ebiten"
 )
 
 type Projectile struct {
-	*Entity
+	*engine.Entity
 	speed float64
 }
 
 func NewProjectile(position *vec2.T) *Projectile {
 	projectile := &Projectile{
-		Entity: NewEntity(),
+		Entity: engine.NewEntity(),
 	}
-	projectile.Image = LoadSubImage(
+	projectile.Image = engine.LoadSubImage(
 		"/img/spritemap.png",
-		CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 2}),
+		engine.CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 2}),
 	)
 	projectile.Position = position
 	projectile.speed = 5.0

@@ -1,8 +1,9 @@
-package spaceinvaders
+package main
 
 import (
+	"engine"
+	"engine/vec2"
 	"math/rand"
-	"spaceinvaders/vec2"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
@@ -13,13 +14,13 @@ const (
 )
 
 type Star struct {
-	*Entity
-	animation *Animation
+	*engine.Entity
+	animation *engine.Animation
 }
 
-func NewStarAnimation() *Animation {
-	return NewAnimation(
-		LoadImage("/img/Stern.png"),
+func NewStarAnimation() *engine.Animation {
+	return engine.NewAnimation(
+		engine.LoadImage("/img/Stern.png"),
 		vec2.I{32, 32},
 		[]vec2.I{
 			{0, 0}, {1, 0}, {2, 0},
@@ -30,9 +31,9 @@ func NewStarAnimation() *Animation {
 	)
 }
 
-func NewStar(animation *Animation) *Star {
+func NewStar(animation *engine.Animation) *Star {
 	star := &Star{
-		Entity: NewEntity(),
+		Entity: engine.NewEntity(),
 	}
 	star.animation = animation
 	star.Image = star.animation.CurrentImage()
