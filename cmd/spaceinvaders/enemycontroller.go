@@ -51,6 +51,8 @@ func (ec *EnemyController) CollideWith(projectile *Projectile) {
 }
 
 func (ec *EnemyController) Update(screen *ebiten.Image) error {
+	ec.Entity.Update(screen)
+
 	for _, enemy := range ec.Enemies {
 		enemy.Update(screen)
 	}

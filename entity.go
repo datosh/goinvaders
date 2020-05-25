@@ -6,6 +6,7 @@ import (
 	"reflect"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
 )
 
 // Entity is basis for all entities in the game
@@ -46,7 +47,7 @@ func (entity *Entity) ImageRect() vec2.Rect {
 }
 
 func (s *Entity) Update(screen *ebiten.Image) error {
-	if ebiten.IsKeyPressed(ebiten.KeyF10) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyF10) {
 		s.ToggleDebug()
 	}
 	return nil
