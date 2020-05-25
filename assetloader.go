@@ -2,6 +2,7 @@ package engine
 
 import (
 	"image"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -10,10 +11,12 @@ import (
 	_ "engine/statik"
 	"engine/vec2"
 
+	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/audio"
 	"github.com/hajimehoshi/ebiten/audio/mp3"
 	"github.com/rakyll/statik/fs"
+	"golang.org/x/image/font"
 )
 
 const (
@@ -117,4 +120,32 @@ func LoadAudioPlayer(path string) *audio.Player {
 		log.Panicf("Error creating audio player: %v", err)
 	}
 	return player
+}
+
+func LoadFont(path string, size float64) font.Face {
+	ttfFile, err := assetFileSystem.Open(path)
+	if err != nil {
+		log.Panicf("Error opening ttf file: %v", err)
+	}
+	defer func() {
+		err = ttfFile.Close()
+		if err != nil {
+			log.Panicf("Error closing ttf file: %v", err)
+		}
+	}()
+
+	fontBytes, err := ioutil.ReadAll(ttfFile)
+	if err != nil {
+		log.Panicf("Error reading from ttfFile: %v", err)
+	}
+
+	tt, err := truetype.Parse(fontBytes)
+	if err != nil {
+		log.Panicf("Error parsing font bytes: %v", err)
+	}
+
+	return truetype.NewFace(tt, &truetype.Options{
+		Size:    size,
+		Hinting: font.HintingFull,
+	})
 }

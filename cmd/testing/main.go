@@ -2,10 +2,13 @@ package main
 
 import (
 	"engine"
+	"image/color"
 	_ "image/png"
 	"log"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/text"
+	"golang.org/x/image/font"
 
 	_ "engine/statik"
 	"engine/vec2"
@@ -38,6 +41,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 
 type Spaceship struct {
 	*engine.Entity
+	nameFont font.Face
 }
 
 func NewSpaceship() *Spaceship {
@@ -51,10 +55,21 @@ func NewSpaceship() *Spaceship {
 			vec2.I{2, 3},
 		),
 	)
+	spaceship.nameFont = engine.LoadFont("/ttf/Orbitron.ttf", 12)
 	spaceship.Position = &vec2.T{200, 200}
 	spaceship.HitboxSize = &vec2.T{51, 51}
 	spaceship.HitboxOffset = &vec2.T{6, -3}
 	return spaceship
+}
+
+func (s *Spaceship) Draw(screen *ebiten.Image) {
+	s.Entity.Draw(screen)
+
+	text.Draw(
+		screen, "Spaceship", s.nameFont,
+		s.Position.AsI().X, s.Position.AsI().Y+60,
+		color.RGBA{255, 255, 0, 255},
+	)
 }
 
 func (s *Spaceship) Update(screen *ebiten.Image) error {
