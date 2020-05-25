@@ -1,19 +1,11 @@
 # Spaceinvaders
 
-Controller
+image:https://github.com/datosh/goinvaders/workflows/Test/badge.svg[Test]
 
+image:./screenshots/spaceinvaders.png[spaceinvaders]
 
-Sprite
-* world_position (x, y)
-* hitbox
-** offset (rel world_position)
-** size
-* image (optional)
-** scale
-** offset (rel world_position)
-** size
-* 
+link:https://github.com/datosh/goinvaders/actions[Download]
 
-## Android Port
+## How To
 
 link:https://github.com/hajimehoshi/go-inovation[Working Android Example Repo]
