@@ -1,7 +1,7 @@
 on: [push, pull_request]
 name: Test
 jobs:
-  test:
+  windows:
     runs-on: windows-latest
     steps:
     - name: Install Go
@@ -12,3 +12,10 @@ jobs:
       uses: actions/checkout@v2
     - name: Test
       run: go test ./...
+    - name: Build
+      run: go build -o spaceinvaders.exe ./cmd/spaceinvaders/
+    - name: Upload Windows Build
+      uses: actions/upload-artifact@v1
+      with:
+        name: windows
+        path: spaceinvaders.exe
