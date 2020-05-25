@@ -13,15 +13,17 @@ import (
 
 type Score struct {
 	*engine.Entity
-	current int
-	face    font.Face
+	currentScore int
+	currentLevel int
+	face         font.Face
 }
 
 func NewScore() *Score {
 	score := &Score{
-		Entity:  engine.NewEntity(),
-		current: 0,
-		face:    engine.LoadFont("/ttf/Orbitron.ttf", 14),
+		Entity:       engine.NewEntity(),
+		currentScore: 0,
+		currentLevel: 1,
+		face:         engine.LoadFont("/ttf/Orbitron.ttf", 14),
 	}
 	score.Position.Add(vec2.New(10, 15))
 
@@ -37,9 +39,13 @@ func (s *Score) Draw(screen *ebiten.Image) {
 }
 
 func (s *Score) Add(delta int) {
-	s.current += delta
+	s.currentScore += delta
+}
+
+func (s *Score) SetLevel(level int) {
+	s.currentLevel = level
 }
 
 func (s *Score) text() string {
-	return fmt.Sprintf("Score: %d", s.current)
+	return fmt.Sprintf("Level: %d    Score: %d", s.currentLevel, s.currentScore)
 }

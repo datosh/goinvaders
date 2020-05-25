@@ -33,18 +33,6 @@ func NewEnemyController(score *Score) *EnemyController {
 	ec.HitboxOffset = &vec2.T{X: 25, Y: 25}
 	ec.Debug = false
 
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 020, Y: 30}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 120, Y: 30}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 220, Y: 30}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 320, Y: 30}, NewEnemy1Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 420, Y: 30}, NewEnemy1Animation()))
-
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 020, Y: 150}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 120, Y: 150}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 220, Y: 150}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 320, Y: 150}, NewEnemy2Animation()))
-	ec.AddEnemy(NewEnemy(&vec2.T{X: 420, Y: 150}, NewEnemy2Animation()))
-
 	return ec
 }
 
@@ -57,7 +45,7 @@ func (ec *EnemyController) CollideWith(projectile *Projectile) {
 		if enemy.Hitbox().Intersects(projectile.Hitbox()) {
 			enemy.Hit()
 			projectile.Die()
-			ec.score.Add(1)
+			ec.score.Add(10)
 		}
 	}
 }

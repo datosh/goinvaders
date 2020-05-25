@@ -3,10 +3,18 @@ package main
 import (
 	"engine"
 	"engine/vec2"
+	"log"
 	"time"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/audio"
+)
+
+type EnemyType int
+
+const (
+	EnemyOne EnemyType = iota
+	EnemyTwo
 )
 
 type Enemy struct {
@@ -16,7 +24,7 @@ type Enemy struct {
 	hitPoints int
 }
 
-func NewEnemy1Animation() *engine.Animation {
+func newEnemy1Animation() *engine.Animation {
 	return engine.NewAnimation(
 		engine.LoadImage("/img/spritemap.png"),
 		vec2.I{X: 64, Y: 48},
@@ -25,7 +33,7 @@ func NewEnemy1Animation() *engine.Animation {
 	)
 }
 
-func NewEnemy2Animation() *engine.Animation {
+func newEnemy2Animation() *engine.Animation {
 	return engine.NewAnimation(
 		engine.LoadImage("/img/spritemap.png"),
 		vec2.I{X: 64, Y: 48},
@@ -34,13 +42,22 @@ func NewEnemy2Animation() *engine.Animation {
 	)
 }
 
-func NewEnemy(position *vec2.T, animation *engine.Animation) *Enemy {
+func NewEnemy(position *vec2.T, enemyType EnemyType) *Enemy {
 	enemy := &Enemy{
 		Entity:    engine.NewEntity(),
 		hitAudio:  engine.LoadAudioPlayer("/audio/au.mp3"),
 		hitPoints: 3,
 	}
-	enemy.animation = animation
+
+	switch enemyType {
+	case EnemyOne:
+		enemy.animation = newEnemy1Animation()
+	case EnemyTwo:
+		enemy.animation = newEnemy2Animation()
+	default:
+		log.Panicf("There is no EnemyType: %v", enemyType)
+	}
+
 	enemy.Image = enemy.animation.CurrentImage()
 	enemy.Position = position
 	enemy.HitboxSize = vec2.NewI(enemy.Image.Size()).AsT()

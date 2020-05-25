@@ -4,7 +4,6 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/ebitenutil"
 )
 
 type Spaceinvaders struct {
@@ -12,6 +11,8 @@ type Spaceinvaders struct {
 	enemyController *EnemyController
 	stars           []*Star
 	score           *Score
+	levels          *Levels
+	currentLevel    int
 }
 
 func (si *Spaceinvaders) Update(screen *ebiten.Image) error {
@@ -42,10 +43,11 @@ func (si *Spaceinvaders) Draw(screen *ebiten.Image) {
 	si.score.Draw(screen)
 
 	if len(si.enemyController.Enemies) == 0 {
-		ebitenutil.DebugPrintAt(
-			screen, "WINNER WINNER CHICKEN DINNER",
-			640/2-100, 480/2,
-		)
+		if si.currentLevel != si.levels.LastLevel() {
+			si.currentLevel++
+			si.levels.Load(si, si.currentLevel)
+			si.score.SetLevel(si.currentLevel)
+		}
 	}
 }
 
@@ -55,10 +57,13 @@ func (si *Spaceinvaders) Layout(int, int) (int, int) {
 
 func NewSpaceinvaders() *Spaceinvaders {
 	spaceinvaders := &Spaceinvaders{
-		player: NewPlayer(),
-		score:  NewScore(),
+		player:       NewPlayer(),
+		score:        NewScore(),
+		levels:       &Levels{},
+		currentLevel: 1,
 	}
 	spaceinvaders.enemyController = NewEnemyController(spaceinvaders.score)
+	spaceinvaders.levels.Load(spaceinvaders, spaceinvaders.currentLevel)
 
 	for i := 0; i < 15; i++ {
 		spaceinvaders.stars = append(
