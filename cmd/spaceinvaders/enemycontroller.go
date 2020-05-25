@@ -16,9 +16,10 @@ type EnemyController struct {
 	moveDistance    float64
 	moveRight       bool
 	changeDirection bool
+	score           *Score
 }
 
-func NewEnemyController() *EnemyController {
+func NewEnemyController(score *Score) *EnemyController {
 	ec := &EnemyController{
 		Entity:          engine.NewEntity(),
 		moveTimer:       time.Now(),
@@ -26,6 +27,7 @@ func NewEnemyController() *EnemyController {
 		moveDistance:    20.0,
 		moveRight:       true,
 		changeDirection: false,
+		score:           score,
 	}
 	ec.HitboxSize = &vec2.T{X: 570, Y: 400}
 	ec.HitboxOffset = &vec2.T{X: 25, Y: 25}
@@ -55,6 +57,7 @@ func (ec *EnemyController) CollideWith(projectile *Projectile) {
 		if enemy.Hitbox().Intersects(projectile.Hitbox()) {
 			enemy.Hit()
 			projectile.Die()
+			ec.score.Add(1)
 		}
 	}
 }
@@ -86,7 +89,10 @@ func (ec *EnemyController) Update(screen *ebiten.Image) error {
 		ec.moveTimer = time.Now()
 	}
 
+	numEnemiesBefore := len(ec.Enemies)
 	ec.RemoveDead()
+	numEnemiesDied := numEnemiesBefore - len(ec.Enemies)
+	ec.score.Add(100 * numEnemiesDied)
 	return nil
 }
 

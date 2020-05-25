@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
@@ -12,11 +11,13 @@ type Spaceinvaders struct {
 	player          *Player
 	enemyController *EnemyController
 	stars           []*Star
+	score           *Score
 }
 
 func (si *Spaceinvaders) Update(screen *ebiten.Image) error {
 	si.player.Update(screen)
 	si.enemyController.Update(screen)
+	si.score.Update(screen)
 
 	for _, projectile := range si.player.projectiles {
 		si.enemyController.CollideWith(projectile)
@@ -38,6 +39,7 @@ func (si *Spaceinvaders) Draw(screen *ebiten.Image) {
 
 	si.player.Draw(screen)
 	si.enemyController.Draw(screen)
+	si.score.Draw(screen)
 
 	if len(si.enemyController.Enemies) == 0 {
 		ebitenutil.DebugPrintAt(
@@ -45,11 +47,6 @@ func (si *Spaceinvaders) Draw(screen *ebiten.Image) {
 			640/2-100, 480/2,
 		)
 	}
-
-	ebitenutil.DebugPrint(
-		screen,
-		fmt.Sprintf("FPS %f, TPS %f", ebiten.CurrentFPS(), ebiten.CurrentTPS()),
-	)
 }
 
 func (si *Spaceinvaders) Layout(int, int) (int, int) {
@@ -58,9 +55,10 @@ func (si *Spaceinvaders) Layout(int, int) (int, int) {
 
 func NewSpaceinvaders() *Spaceinvaders {
 	spaceinvaders := &Spaceinvaders{
-		player:          NewPlayer(),
-		enemyController: NewEnemyController(),
+		player: NewPlayer(),
+		score:  NewScore(),
 	}
+	spaceinvaders.enemyController = NewEnemyController(spaceinvaders.score)
 
 	for i := 0; i < 15; i++ {
 		spaceinvaders.stars = append(
