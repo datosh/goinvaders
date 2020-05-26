@@ -9,19 +9,19 @@ import (
 
 type Projectile struct {
 	*engine.Entity
-	speed float64
+	Direction *vec2.T
 }
 
-func NewProjectile(position *vec2.T) *Projectile {
+func NewProjectile(position, direction *vec2.T) *Projectile {
 	projectile := &Projectile{
-		Entity: engine.NewEntity(),
+		Entity:    engine.NewEntity(),
+		Direction: direction,
 	}
 	projectile.Image = engine.LoadSubImage(
 		"/img/spritemap.png",
 		engine.CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 2}),
 	)
 	projectile.Position = position
-	projectile.speed = 5.0
 	projectile.ImageScale = 0.25
 	projectile.HitboxSize = vec2.NewI(projectile.Image.Size()).AsT().
 		Mul(projectile.ImageScale)
@@ -30,7 +30,7 @@ func NewProjectile(position *vec2.T) *Projectile {
 
 func (p *Projectile) Update(screen *ebiten.Image) error {
 	p.Entity.Update(screen)
-	p.Position.Add(vec2.UY().Mul(p.speed).Invert())
+	p.Position.Add(p.Direction)
 	return nil
 }
 
