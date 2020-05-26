@@ -13,19 +13,21 @@ type Player struct {
 	*engine.Entity
 	speed float64
 
-	projectiles    []*Projectile
-	fireOnCooldown bool
-	fireCooldown   time.Duration
-	fireSound      *audio.Player
+	projectiles             []*Projectile
+	fireOnCooldown          bool
+	fireCooldown            time.Duration
+	fireSound               *audio.Player
+	fireProjectileDirection *vec2.T
 }
 
 func NewPlayer() *Player {
 	player := &Player{
-		Entity:         engine.NewEntity(),
-		speed:          4,
-		fireOnCooldown: false,
-		fireCooldown:   time.Second / 3,
-		fireSound:      engine.LoadAudioPlayer("/audio/pew.mp3"),
+		Entity:                  engine.NewEntity(),
+		speed:                   4,
+		fireOnCooldown:          false,
+		fireCooldown:            time.Second / 3,
+		fireSound:               engine.LoadAudioPlayer("/audio/pew.mp3"),
+		fireProjectileDirection: vec2.UY().Mul(5).Invert(),
 	}
 	player.fireSound.SetVolume(0.2)
 	player.Image = engine.LoadSubImage(
@@ -34,6 +36,7 @@ func NewPlayer() *Player {
 	)
 	player.Position = &vec2.T{255, 420}
 	player.ImageScale = 1.2
+	player.HitboxSize = vec2.New(64, 48)
 
 	return player
 }
@@ -71,10 +74,17 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	}
 }
 
+func (p *Player) CollideWith(projectile *Projectile) bool {
+	return p.Hitbox().Intersects(projectile.Hitbox())
+}
+
 func (p *Player) fire() {
 	p.fireSound.Rewind()
 	p.fireSound.Play()
-	p.addProjectile(NewProjectile(p.Position.Added(vec2.New(29, -7))))
+	p.addProjectile(NewProjectile(
+		p.Position.Added(vec2.New(29, -7)),
+		p.fireProjectileDirection,
+	))
 	p.startFireCooldown()
 }
 
