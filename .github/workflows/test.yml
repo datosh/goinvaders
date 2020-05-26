@@ -1,5 +1,7 @@
+name: Pipeline
+
 on: [push, pull_request]
-name: Test
+
 jobs:
   windows:
     runs-on: windows-latest
@@ -13,9 +15,27 @@ jobs:
     - name: Test
       run: go test ./...
     - name: Build
-      run: go build -o spaceinvaders.exe ./cmd/spaceinvaders/
-    - name: Upload Windows Build
+      run: go build -o spaceinvaders ./cmd/spaceinvaders/
+    - name: Upload Build
       uses: actions/upload-artifact@v1
       with:
         name: windows
-        path: spaceinvaders.exe
+        path: spaceinvaders
+  macos:
+    runs-on: macos-latest
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.13.x
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Test
+      run: go test ./...
+    - name: Build
+      run: go build -o spaceinvaders ./cmd/spaceinvaders/
+    - name: Upload Build
+      uses: actions/upload-artifact@v1
+      with:
+        name: macos
+        path: spaceinvaders
