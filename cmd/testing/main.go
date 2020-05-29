@@ -1,18 +1,34 @@
+//go:generate statik -src=assets -include=*.png,*.mp3,*.ttf
+
 package main
 
 import (
 	"engine"
 	"image/color"
 	_ "image/png"
+
+	_ "engine/cmd/testing/statik"
+	"engine/vec2"
+
 	"log"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/text"
+	"github.com/rakyll/statik/fs"
 	"golang.org/x/image/font"
-
-	_ "engine/statik"
-	"engine/vec2"
 )
+
+var (
+	assetLoader *engine.AssetLoader
+)
+
+func init() {
+	statikFS, err := fs.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+	assetLoader = engine.NewAssetLoader(statikFS)
+}
 
 func main() {
 	ebiten.SetWindowSize(640, 480)
@@ -48,14 +64,14 @@ func NewSpaceship() *Spaceship {
 	spaceship := &Spaceship{
 		Entity: engine.NewEntity(),
 	}
-	spaceship.Image = engine.LoadSubImage(
+	spaceship.Image = assetLoader.LoadSubImage(
 		"/img/spritemap.png",
 		engine.CoordinatesToBounds(
 			vec2.I{64, 48},
 			vec2.I{2, 3},
 		),
 	)
-	spaceship.nameFont = engine.LoadFont("/ttf/Orbitron.ttf", 12)
+	spaceship.nameFont = assetLoader.LoadFont("/ttf/Orbitron.ttf", 12)
 	spaceship.Position = &vec2.T{200, 200}
 	spaceship.HitboxSize = &vec2.T{51, 51}
 	spaceship.HitboxOffset = &vec2.T{6, -3}
