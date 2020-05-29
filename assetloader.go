@@ -5,17 +5,13 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
-	// Import to be embedded images
-	_ "engine/statik"
 	"engine/vec2"
 
 	"github.com/golang/freetype/truetype"
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/audio"
 	"github.com/hajimehoshi/ebiten/audio/mp3"
-	"github.com/rakyll/statik/fs"
 	"golang.org/x/image/font"
 )
 
@@ -23,46 +19,29 @@ const (
 	sampleRate = 48000
 )
 
-var (
-	assetFileSystem http.FileSystem
-	audioContext    *audio.Context
-)
-
-func init() {
-	initStatik()
-	initAudio()
+type AssetLoader struct {
+	fs           http.FileSystem
+	audioContext *audio.Context
 }
 
-func logFilePath(path string, info os.FileInfo, err error) error {
-	log.Println(path)
-	return nil
-}
-
-func listFiles() {
-	log.Println("Assets:")
-	fs.Walk(assetFileSystem, "/", logFilePath)
-}
-
-func initStatik() {
-	var err error
-	assetFileSystem, err = fs.New()
-	if err != nil {
-		log.Fatalln(err)
+func NewAssetLoader(fs http.FileSystem) *AssetLoader {
+	assetLoader := &AssetLoader{
+		fs:           fs,
+		audioContext: nil,
 	}
-	listFiles()
-}
 
-func initAudio() {
 	var err error
-	audioContext, err = audio.NewContext(sampleRate)
+	assetLoader.audioContext, err = audio.NewContext(sampleRate)
 	if err != nil {
 		log.Panicf("Error initializing audio context: %v", err)
 	}
+
+	return assetLoader
 }
 
 // LoadImage from embedded (statik) filesystem.
-func LoadImage(path string) *ebiten.Image {
-	file, err := assetFileSystem.Open(path)
+func (loader *AssetLoader) LoadImage(path string) *ebiten.Image {
+	file, err := loader.fs.Open(path)
 	if err != nil {
 		log.Println(err)
 		return nil
@@ -87,8 +66,8 @@ func LoadImage(path string) *ebiten.Image {
 
 // LoadSubImage uses `LoadImage` to load an image,
 // but only returns a sub image specified by bounds.
-func LoadSubImage(path string, bounds image.Rectangle) *ebiten.Image {
-	return LoadImage(path).SubImage(bounds).(*ebiten.Image)
+func (loader *AssetLoader) LoadSubImage(path string, bounds image.Rectangle) *ebiten.Image {
+	return loader.LoadImage(path).SubImage(bounds).(*ebiten.Image)
 }
 
 // CoordinatesToBounds creates the required bounds Rectangle for `LoadSubImage`
@@ -103,27 +82,27 @@ func CoordinatesToBounds(tileSize vec2.I, coordinates vec2.I) image.Rectangle {
 
 // LoadAudioPlayer created a new audio player for the specified audio file,
 // which is loaded from embedded (statik) assets.
-func LoadAudioPlayer(path string) *audio.Player {
-	f, err := assetFileSystem.Open(path)
+func (loader *AssetLoader) LoadAudioPlayer(path string) *audio.Player {
+	f, err := loader.fs.Open(path)
 	if err != nil {
 		log.Panicf("Error opening audio file: %v", err)
 		return nil
 	}
 
-	m, err := mp3.Decode(audioContext, f)
+	m, err := mp3.Decode(loader.audioContext, f)
 	if err != nil {
 		log.Panicf("Error decoding: %v", err)
 	}
 
-	player, err := audio.NewPlayer(audioContext, m)
+	player, err := audio.NewPlayer(loader.audioContext, m)
 	if err != nil {
 		log.Panicf("Error creating audio player: %v", err)
 	}
 	return player
 }
 
-func LoadFont(path string, size float64) font.Face {
-	ttfFile, err := assetFileSystem.Open(path)
+func (loader *AssetLoader) LoadFont(path string, size float64) font.Face {
+	ttfFile, err := loader.fs.Open(path)
 	if err != nil {
 		log.Panicf("Error opening ttf file: %v", err)
 	}

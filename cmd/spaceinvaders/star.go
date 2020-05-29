@@ -20,7 +20,7 @@ type Star struct {
 
 func NewStarAnimation() *engine.Animation {
 	return engine.NewAnimation(
-		engine.LoadImage("/img/Stern.png"),
+		assetLoader.LoadImage("/img/Stern.png"),
 		vec2.I{32, 32},
 		[]vec2.I{
 			{0, 0}, {1, 0}, {2, 0},
