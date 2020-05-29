@@ -3,7 +3,6 @@ package engine
 import (
 	"engine/vec2"
 	"image/color"
-	"reflect"
 
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
@@ -46,72 +45,65 @@ func (entity *Entity) ImageRect() vec2.Rect {
 	}
 }
 
-func (s *Entity) Update(screen *ebiten.Image) error {
+// Update should be called in game loop
+func (entity *Entity) Update(screen *ebiten.Image) error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyF10) {
-		s.ToggleDebug()
+		entity.ToggleDebug()
 	}
 	return nil
 }
 
-func (s *Entity) Draw(screen *ebiten.Image) {
-	if s.Image != nil {
+// Draw should be called in draw loop
+func (entity *Entity) Draw(screen *ebiten.Image) {
+	if entity.Image != nil {
 		options := &ebiten.DrawImageOptions{}
-		options.GeoM.Scale(s.ImageScale, s.ImageScale)
+		options.GeoM.Scale(entity.ImageScale, entity.ImageScale)
 		options.GeoM.Translate(
-			s.Position.Added(s.ImageOffset).Coords(),
+			entity.Position.Added(entity.ImageOffset).Coords(),
 		)
-		screen.DrawImage(s.Image, options)
+		screen.DrawImage(entity.Image, options)
 	}
 
-	if s.Debug {
-		if s.HitboxSize != nil {
-			DrawRect(screen, *s.Hitbox(), color.RGBA{255, 0, 0, 255})
+	if entity.Debug {
+		if entity.HitboxSize != nil {
+			DrawRect(screen, *entity.Hitbox(), color.RGBA{255, 0, 0, 255})
 		}
 
-		if s.Image != nil {
-			DrawRect(screen, s.ImageRect(), color.RGBA{0, 255, 0, 255})
+		if entity.Image != nil {
+			DrawRect(screen, entity.ImageRect(), color.RGBA{0, 255, 0, 255})
 		}
 
 		DrawRect(
 			screen,
-			*vec2.NewRect(s.Position.X, s.Position.Y, 2, 2),
+			*vec2.NewRect(entity.Position.X, entity.Position.Y, 2, 2),
 			color.RGBA{0, 0, 255, 255},
 		)
 	}
 }
 
-func (s *Entity) Hitbox() *vec2.Rect {
-	if s.HitboxSize == nil {
+// Hitbox returns entities hitbox, which is based on players position, as well
+// as hitbox offset and size
+func (entity *Entity) Hitbox() *vec2.Rect {
+	if entity.HitboxSize == nil {
 		return nil
 	}
 	return &vec2.Rect{
-		Min: s.Position.Added(s.HitboxOffset),
-		Max: s.Position.Added(s.HitboxOffset).Add(s.HitboxSize),
+		Min: entity.Position.Added(entity.HitboxOffset),
+		Max: entity.Position.Added(entity.HitboxOffset).Add(entity.HitboxSize),
 	}
 }
 
-func (s *Entity) Die() {
-	s.Alive = false
+// Die kills the entity
+func (entity *Entity) Die() {
+	entity.Alive = false
 }
 
-func (s *Entity) Dead() bool {
-	return !s.Alive
+// Dead returns true if the entity is dead
+func (entity *Entity) Dead() bool {
+	return !entity.Alive
 }
 
-func (s *Entity) ToggleDebug() {
-	s.Debug = !s.Debug
-}
-
-// TODO: Move this to some filter / container file
-func Filter(arr interface{}, cond func(interface{}) bool) interface{} {
-	contentType := reflect.TypeOf(arr)
-	contentValue := reflect.ValueOf(arr)
-
-	newContent := reflect.MakeSlice(contentType, 0, 0)
-	for i := 0; i < contentValue.Len(); i++ {
-		if content := contentValue.Index(i); cond(content.Interface()) {
-			newContent = reflect.Append(newContent, content)
-		}
-	}
-	return newContent.Interface()
+// ToggleDebug mode for this entity
+func (entity *Entity) ToggleDebug() {
+	entity.Debug = !entity.Debug
 }

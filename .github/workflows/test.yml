@@ -6,7 +6,8 @@ jobs:
   test:
     strategy:
       matrix:
-        platform: [macos-latest, windows-latest]
+        platform: [windows-latest]
+        # platform: [macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install Go
@@ -21,10 +22,17 @@ jobs:
       run: go generate ./...
     - name: Test
       run: go test ./...
-    - name: Build
+    - name: Build Spaceinvaders
       run: go build -o spaceinvaders ./cmd/spaceinvaders/
-    - name: Upload Build
+    - name: Upload Spaceinvaders
       uses: actions/upload-artifact@v1
       with:
         name: windows
         path: spaceinvaders
+    - name: Build Gestrandet
+      run: go build -o gestrandet ./cmd/gestrandet/
+    - name: Upload Gestrandet
+      uses: actions/upload-artifact@v1
+      with:
+        name: windows
+        path: gestrandet
