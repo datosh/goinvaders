@@ -3,8 +3,11 @@ name: Pipeline
 on: [push, pull_request]
 
 jobs:
-  windows:
-    runs-on: windows-latest
+  test:
+    strategy:
+      matrix:
+        platform: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
     steps:
     - name: Install Go
       uses: actions/setup-go@v2
@@ -12,6 +15,8 @@ jobs:
         go-version: 1.13.x
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Generate
+      run: go get
     - name: Generate
       run: go generate ./...
     - name: Test
@@ -22,24 +27,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: windows
-        path: spaceinvaders
-  macos:
-    runs-on: macos-latest
-    steps:
-    - name: Install Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.13.x
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Generate
-      run: go generate ./...
-    - name: Test
-      run: go test ./...
-    - name: Build
-      run: go build -o spaceinvaders ./cmd/spaceinvaders/
-    - name: Upload Build
-      uses: actions/upload-artifact@v1
-      with:
-        name: macos
         path: spaceinvaders
