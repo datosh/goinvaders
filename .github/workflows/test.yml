@@ -16,9 +16,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Generate
-      run: go get
-    - name: Generate
-      run: go generate ./...
+      run: |
+        export PATH=$PATH:$(go env GOPATH)/bin
+        go generate ./...
     - name: Test
       run: go test ./...
     - name: Build
