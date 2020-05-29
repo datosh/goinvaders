@@ -23,7 +23,7 @@ func NewScore() *Score {
 		Entity:       engine.NewEntity(),
 		currentScore: 0,
 		currentLevel: 1,
-		face:         engine.LoadFont("/ttf/Orbitron.ttf", 14),
+		face:         assetLoader.LoadFont("/ttf/Orbitron.ttf", 14),
 	}
 	score.Position.Add(vec2.New(10, 15))
 
