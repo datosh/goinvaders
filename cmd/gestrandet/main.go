@@ -1,4 +1,4 @@
-//go:generate statik -src=assets -include=*.png,*.mp3,*.ttf
+//go:generate statik -src=assets -include=*.png,*.mp3,*.ttf,*.json
 
 package main
 

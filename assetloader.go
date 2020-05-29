@@ -19,11 +19,14 @@ const (
 	sampleRate = 48000
 )
 
+// AssetLoader can be used with any FileSystem, and provides helper functions
+// to load images (png), sound (mp3), and font (ttf) files.
 type AssetLoader struct {
 	fs           http.FileSystem
 	audioContext *audio.Context
 }
 
+// NewAssetLoader creates a new asset loader using the specified file system.
 func NewAssetLoader(fs http.FileSystem) *AssetLoader {
 	assetLoader := &AssetLoader{
 		fs:           fs,
@@ -39,7 +42,7 @@ func NewAssetLoader(fs http.FileSystem) *AssetLoader {
 	return assetLoader
 }
 
-// LoadImage from embedded (statik) filesystem.
+// LoadImage from embedded filesystem.
 func (loader *AssetLoader) LoadImage(path string) *ebiten.Image {
 	file, err := loader.fs.Open(path)
 	if err != nil {
@@ -101,6 +104,7 @@ func (loader *AssetLoader) LoadAudioPlayer(path string) *audio.Player {
 	return player
 }
 
+// LoadFont loads font location at path with size in pixel.
 func (loader *AssetLoader) LoadFont(path string, size float64) font.Face {
 	ttfFile, err := loader.fs.Open(path)
 	if err != nil {
