@@ -8,6 +8,7 @@ jobs:
       matrix:
         platform: [windows-latest]
         # platform: [macos-latest, windows-latest]
+        binaries: [spaceinvaders, gestrandet]
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Install Go
@@ -20,19 +21,15 @@ jobs:
       run: go install github.com/rakyll/statik
     - name: Generate
       run: go generate ./...
+    # Test breaks on Windows VM
+    # https://github.com/hajimehoshi/ebiten/issues/903
+    # TODO: Build only on Linux - and cross compile for all platforms?
     # - name: Test
     #   run: go test ./...
-    - name: Build Spaceinvaders
-      run: go build -o spaceinvaders ./cmd/spaceinvaders/
-    - name: Upload Spaceinvaders
+    - name: Build ${{ matrix.binaries }}
+      run: go build -o ${{ matrix.binaries }}.exe ./cmd/${{ matrix.binaries }}/
+    - name: Upload ${{ matrix.binaries }}
       uses: actions/upload-artifact@v1
       with:
-        name: windows
-        path: spaceinvaders
-    - name: Build Gestrandet
-      run: go build -o gestrandet ./cmd/gestrandet/
-    - name: Upload Gestrandet
-      uses: actions/upload-artifact@v1
-      with:
-        name: windows
-        path: gestrandet
+        name: ${{ matrix.binaries }}-windows
+        path: ${{ matrix.binaries }}.exe
