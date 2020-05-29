@@ -17,7 +17,7 @@ func NewProjectile(position, direction *vec2.T) *Projectile {
 		Entity:    engine.NewEntity(),
 		Direction: direction,
 	}
-	projectile.Image = engine.LoadSubImage(
+	projectile.Image = assetLoader.LoadSubImage(
 		"/img/spritemap.png",
 		engine.CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 2}),
 	)
