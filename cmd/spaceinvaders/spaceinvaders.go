@@ -1,7 +1,6 @@
 package main
 
 import (
-	"engine"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
@@ -49,7 +48,7 @@ func (si *Spaceinvaders) Draw(screen *ebiten.Image) {
 	if si.gameOver {
 		text.Draw(
 			screen, "GAME OVER",
-			engine.LoadFont("/ttf/Orbitron.ttf", 32),
+			assetLoader.LoadFont("/ttf/Orbitron.ttf", 32),
 			180, 220,
 			color.RGBA{255, 0, 0, 255},
 		)

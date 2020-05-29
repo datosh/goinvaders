@@ -26,11 +26,11 @@ func NewPlayer() *Player {
 		speed:                   4,
 		fireOnCooldown:          false,
 		fireCooldown:            time.Second / 3,
-		fireSound:               engine.LoadAudioPlayer("/audio/pew.mp3"),
+		fireSound:               assetLoader.LoadAudioPlayer("/audio/pew.mp3"),
 		fireProjectileDirection: vec2.UY().Mul(5).Invert(),
 	}
 	player.fireSound.SetVolume(0.2)
-	player.Image = engine.LoadSubImage(
+	player.Image = assetLoader.LoadSubImage(
 		"/img/spritemap.png",
 		engine.CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 3}),
 	)

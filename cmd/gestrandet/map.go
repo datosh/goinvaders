@@ -1,7 +1,6 @@
 package main
 
 import (
-	"engine"
 	"engine/vec2"
 	"log"
 
@@ -30,7 +29,7 @@ func NewMap() *Map {
 		log.Fatalf("Error creating map image: %v", err)
 	}
 
-	grass := engine.LoadImage("/img/grass.png")
+	grass := assetLoader.LoadImage("/img/grass.png")
 
 	for x := 0; x < MapSize.X; x++ {
 		for y := 0; y < MapSize.Y; y++ {
