@@ -5,7 +5,6 @@ package main
 import (
 	"engine"
 	"image/color"
-	_ "image/png"
 
 	_ "engine/cmd/testing/statik"
 	"engine/vec2"

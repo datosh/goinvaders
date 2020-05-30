@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	_ "image/png"
+
 	"engine/vec2"
 
 	"github.com/golang/freetype/truetype"
