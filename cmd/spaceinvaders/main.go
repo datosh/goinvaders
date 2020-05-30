@@ -4,7 +4,6 @@ package main
 
 import (
 	"engine"
-	_ "image/png"
 
 	_ "engine/cmd/spaceinvaders/statik"
 
