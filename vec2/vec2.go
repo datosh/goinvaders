@@ -49,6 +49,10 @@ func (t *T) Copy() *T {
 	return &p
 }
 
+func (t *T) Null() bool {
+	return t.X == 0 && t.Y == 0
+}
+
 // Add other to receiver. Other is unchanged.
 // Receiver is returned for easy chaning.
 func (t *T) Add(other *T) *T {
