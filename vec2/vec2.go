@@ -112,7 +112,9 @@ func (t *T) Length() float64 {
 
 // Normalize receiver. After calling Normalize, Length is always 1.
 func (t *T) Normalize() {
-	t.Mul(1 / t.Length())
+	if t.Length() != 0 {
+		t.Mul(1 / t.Length())
+	}
 }
 
 // AsI converts a float64 based vector to an integer based one.
