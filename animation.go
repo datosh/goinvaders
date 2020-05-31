@@ -81,6 +81,12 @@ func (anim *Animation) Resume() {
 	anim.paused = false
 }
 
+// Reset animation back to first frame.
+func (anim *Animation) Reset() {
+	anim.currentFrame = 0
+	anim.lastFrameChange = time.Now()
+}
+
 func (anim *Animation) currentTile() vec2.I {
 	return anim.tiles[anim.currentFrame]
 }
@@ -95,4 +101,12 @@ func (anim *Animation) nextFrameChange() time.Time {
 
 func (anim *Animation) nextFrame() int {
 	return (anim.currentFrame + 1) % len(anim.tiles)
+}
+
+func UniformDuration(d time.Duration, n int) []time.Duration {
+	duration := make([]time.Duration, n)
+	for i, _ := range duration {
+		duration[i] = d
+	}
+	return duration
 }

@@ -78,7 +78,6 @@ func (tm *TiledMap) Generate() *ebiten.Image {
 	for idx, tileType := range tm.Layers[0].Data {
 		xPos := (idx % tm.Width) * tm.TileWidth
 		yPos := (idx / tm.Width) * tm.TileHeight
-		log.Printf("Drawing %d of type %d at %d,%d", idx, tileType, xPos, yPos)
 
 		opts := &ebiten.DrawImageOptions{}
 		opts.GeoM.Translate(float64(xPos), float64(yPos))
