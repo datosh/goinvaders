@@ -161,6 +161,15 @@ func TestVec2(t *testing.T) {
 		assert.Equal(t, a.Y, 0.0)
 	})
 
+	t.Run("Normalize zero vector", func(t *testing.T) {
+		a := &T{0, 0}
+
+		a.Normalize()
+
+		assert.Equal(t, 0.0, a.X)
+		assert.Equal(t, 0.0, a.Y)
+	})
+
 	t.Run("AsI", func(t *testing.T) {
 		a := &T{1.5, 2.0}
 
