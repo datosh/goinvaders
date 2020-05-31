@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	// Required for loading PNG images
 	_ "image/png"
 
 	"engine/vec2"
@@ -21,24 +22,30 @@ const (
 	sampleRate = 48000
 )
 
+var (
+	// audioContext can only be initialized once, as documented in
+	// audio.NewContext. Therefore we make it a singleton for this file.
+	audioContext *audio.Context = nil
+)
+
 // AssetLoader can be used with any FileSystem, and provides helper functions
 // to load images (png), sound (mp3), and font (ttf) files.
 type AssetLoader struct {
-	fs           http.FileSystem
-	audioContext *audio.Context
+	fs http.FileSystem
 }
 
 // NewAssetLoader creates a new asset loader using the specified file system.
 func NewAssetLoader(fs http.FileSystem) *AssetLoader {
 	assetLoader := &AssetLoader{
-		fs:           fs,
-		audioContext: nil,
+		fs: fs,
 	}
 
-	var err error
-	assetLoader.audioContext, err = audio.NewContext(sampleRate)
-	if err != nil {
-		log.Panicf("Error initializing audio context: %v", err)
+	if audioContext == nil {
+		var err error
+		audioContext, err = audio.NewContext(sampleRate)
+		if err != nil {
+			log.Panicf("Error initializing audio context: %v", err)
+		}
 	}
 
 	return assetLoader
@@ -94,12 +101,12 @@ func (loader *AssetLoader) LoadAudioPlayer(path string) *audio.Player {
 		return nil
 	}
 
-	m, err := mp3.Decode(loader.audioContext, f)
+	m, err := mp3.Decode(audioContext, f)
 	if err != nil {
 		log.Panicf("Error decoding: %v", err)
 	}
 
-	player, err := audio.NewPlayer(loader.audioContext, m)
+	player, err := audio.NewPlayer(audioContext, m)
 	if err != nil {
 		log.Panicf("Error creating audio player: %v", err)
 	}

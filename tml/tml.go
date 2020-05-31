@@ -21,16 +21,16 @@ type TiledMap struct {
 	TileHeight int `json:"tileheight"`
 	TileWidth  int `json:"tilewidth"`
 
-	Layers []struct {
+	Layers []*struct {
 		Data []int  `json:"data"`
 		ID   int    `json:"id"`
 		Name string `json:"name"`
 	} `json:"layers"`
 
-	Tilesets []struct {
+	Tilesets []*struct {
 		Name     string `json:"name"`
 		FirstGID int    `json:"firstgid"`
-		Tiles    []struct {
+		Tiles    []*struct {
 			ID   int    `json:"id"`
 			Path string `json:"image"`
 			img  *ebiten.Image
@@ -49,9 +49,13 @@ func NewTiledMap(path string, fs http.FileSystem) *TiledMap {
 
 	loader := engine.NewAssetLoader(fs)
 	base := filepath.Dir(path)
-
-	dto.Tilesets[0].Tiles[0].img =
-		loader.LoadImage(filepath.Join(base, dto.Tilesets[0].Tiles[0].Path))
+	for _, tileset := range dto.Tilesets {
+		for _, tile := range tileset.Tiles {
+			imgPath := filepath.ToSlash(filepath.Join(base, tile.Path))
+			log.Printf("Loading: %v", imgPath)
+			tile.img = loader.LoadImage(imgPath)
+		}
+	}
 
 	return &dto
 }
