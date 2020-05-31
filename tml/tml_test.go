@@ -7,21 +7,39 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	TestFilesDir = http.Dir("../testfiles")
+)
+
 func TestNewTiledMap(t *testing.T) {
-	dto := NewTiledMap("testfiles/testmap.json", http.Dir(".."))
 
-	assert.Equal(t, 12, dto.Height)
-	assert.Equal(t, 1, dto.Layers[0].Data[0])
-	assert.Equal(t, 0, dto.Tilesets[0].Tiles[0].ID)
-	assert.Equal(t, 1, dto.Tilesets[0].FirstGID)
-	assert.NotNil(t, dto.Tilesets[0].Tiles[0].img)
-	assert.Equal(t, 64, dto.Tilesets[0].Tiles[0].img.Bounds().Dx())
+	t.Run("Basic Checks", func(t *testing.T) {
+		dto := NewTiledMap("testmap.json", TestFilesDir)
+
+		assert.Equal(t, 10, dto.Width)
+		assert.Equal(t, 12, dto.Height)
+
+		assert.Equal(t, 120, len(dto.Layers[0].Data))
+	})
+
+	t.Run("Wrong path returns nil", func(t *testing.T) {
+		dto := NewTiledMap("xxxxx.json", TestFilesDir)
+		assert.Nil(t, dto)
+	})
+
 }
 
-func TestGenerate(t *testing.T) {
-	// dto := NewTiledMap("testfiles/testmap.json", http.Dir(".."))
-	// m := dto.Generate()
+// func TestGenerate(t *testing.T) {
+// 	dto := NewTiledMap("testmap.json", TestFilesDir)
+// 	m := dto.Generate()
 
-	// size := m.Bounds().Min
-	// assert.Equal(t, 640, size.X)
-}
+// 	t.Run("Check dimensions", func(t *testing.T) {
+// 		assert.NotNil(t, m)
+
+// 		assert.Equal(t, 640, m.Bounds().Size().X)
+// 		assert.Equal(t, 768, m.Bounds().Size().Y)
+// 	})
+
+// 	f, _ := os.Create("testmap.png")
+// 	png.Encode(f, m)
+// }

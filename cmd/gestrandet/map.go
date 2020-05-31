@@ -1,8 +1,9 @@
 package main
 
 import (
+	"engine/tml"
 	"engine/vec2"
-	"log"
+	"net/http"
 
 	"github.com/hajimehoshi/ebiten"
 )
@@ -13,34 +14,15 @@ var (
 )
 
 type Map struct {
-	image *ebiten.Image
+	mapLoader *tml.TiledMap
+	image     *ebiten.Image
 }
 
 func NewMap() *Map {
-	m := &Map{}
-
-	var err error
-	m.image, err = ebiten.NewImage(
-		MapSize.X*MapTileSize.X,
-		MapSize.Y*MapTileSize.Y,
-		ebiten.FilterDefault,
-	)
-	if err != nil {
-		log.Fatalf("Error creating map image: %v", err)
+	m := &Map{
+		mapLoader: tml.NewTiledMap("config/levels/gestrandet.json", http.Dir("assets")),
 	}
-
-	grass := assetLoader.LoadImage("/img/grass.png")
-
-	for x := 0; x < MapSize.X; x++ {
-		for y := 0; y < MapSize.Y; y++ {
-			options := &ebiten.DrawImageOptions{}
-			options.GeoM.Translate(
-				vec2.NewI(x, y).AsT().Mul(64.0).Coords(),
-			)
-			m.image.DrawImage(grass, options)
-		}
-	}
-
+	m.image = m.mapLoader.Generate()
 	return m
 }
 
