@@ -36,15 +36,19 @@ type TiledMap struct {
 			img  *ebiten.Image
 		} `json:"tiles"`
 	} `json:"tilesets"`
+
+	offsetTable map[int]*ebiten.Image
 }
 
 func NewTiledMap(path string, fs http.FileSystem) *TiledMap {
 	f, err := fs.Open(path)
 	if err != nil {
-		log.Panicf("Unable to open %v", err)
+		log.Printf("Unable to open %v", err)
+		return nil
 	}
 
 	var dto TiledMap
+	dto.offsetTable = make(map[int]*ebiten.Image)
 	json.NewDecoder(f).Decode(&dto)
 
 	loader := engine.NewAssetLoader(fs)
@@ -52,8 +56,8 @@ func NewTiledMap(path string, fs http.FileSystem) *TiledMap {
 	for _, tileset := range dto.Tilesets {
 		for _, tile := range tileset.Tiles {
 			imgPath := filepath.ToSlash(filepath.Join(base, tile.Path))
-			log.Printf("Loading: %v", imgPath)
 			tile.img = loader.LoadImage(imgPath)
+			dto.offsetTable[tileset.FirstGID+tile.ID] = tile.img
 		}
 	}
 
@@ -69,6 +73,21 @@ func (tm *TiledMap) Generate() *ebiten.Image {
 	if err != nil {
 		log.Printf("Error creating new image for map: %v", err)
 		return nil
+	}
+
+	for idx, tileType := range tm.Layers[0].Data {
+		xPos := (idx % tm.Width) * tm.TileWidth
+		yPos := (idx / tm.Width) * tm.TileHeight
+		log.Printf("Drawing %d of type %d at %d,%d", idx, tileType, xPos, yPos)
+
+		opts := &ebiten.DrawImageOptions{}
+		opts.GeoM.Translate(float64(xPos), float64(yPos))
+		tile := tm.offsetTable[tileType]
+		if tile == nil {
+			log.Printf("Error: Cannot draw nil image!")
+			return nil
+		}
+		img.DrawImage(tile, opts)
 	}
 
 	return img

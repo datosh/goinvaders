@@ -3,7 +3,6 @@ package main
 import (
 	"engine"
 	"engine/vec2"
-	"log"
 
 	"github.com/hajimehoshi/ebiten"
 )
@@ -47,10 +46,7 @@ func (p *Player) Update(screen *ebiten.Image) error {
 	}
 	direction.Normalize()
 	direction.Mul(p.speed)
-	log.Printf("Move into %v", direction)
 	p.Position.Add(direction)
-
-	log.Println(p.Position)
 
 	return nil
 }
