@@ -71,14 +71,6 @@ func (p *Player) Update(screen *ebiten.Image) error {
 	p.updateAnimation()
 
 	direction := vec2.New(0, 0)
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		direction.Add(vec2.UX().Invert())
-		p.orientation = left
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		direction.Add(vec2.UX())
-		p.orientation = right
-	}
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
 		direction.Add(vec2.UY().Invert())
 		p.orientation = up
@@ -86,6 +78,14 @@ func (p *Player) Update(screen *ebiten.Image) error {
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
 		direction.Add(vec2.UY())
 		p.orientation = down
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyA) {
+		direction.Add(vec2.UX().Invert())
+		p.orientation = left
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyD) {
+		direction.Add(vec2.UX())
+		p.orientation = right
 	}
 	direction.Normalize()
 	direction.Mul(p.speed)

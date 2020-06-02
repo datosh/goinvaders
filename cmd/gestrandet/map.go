@@ -2,15 +2,9 @@ package main
 
 import (
 	"engine/tml"
-	"engine/vec2"
 	"net/http"
 
 	"github.com/hajimehoshi/ebiten"
-)
-
-var (
-	MapSize     = vec2.NewI(23, 14)
-	MapTileSize = vec2.NewI(64, 64)
 )
 
 type Map struct {
@@ -28,4 +22,12 @@ func NewMap() *Map {
 
 func (m *Map) Draw(screen *ebiten.Image) {
 	screen.DrawImage(m.image, nil)
+}
+
+func (m *Map) Width() int {
+	return m.mapLoader.Width * m.mapLoader.TileWidth
+}
+
+func (m *Map) Height() int {
+	return m.mapLoader.Height * m.mapLoader.TileHeight
 }
