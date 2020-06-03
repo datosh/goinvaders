@@ -103,9 +103,12 @@ func (anim *Animation) nextFrame() int {
 	return (anim.currentFrame + 1) % len(anim.tiles)
 }
 
+// UniformDuration is a helper function to create a slice with `n` times the
+// same duration. Can be used to create a NewAnimation without repeating
+// same duration multiple times.
 func UniformDuration(d time.Duration, n int) []time.Duration {
 	duration := make([]time.Duration, n)
-	for i, _ := range duration {
+	for i := range duration {
 		duration[i] = d
 	}
 	return duration
