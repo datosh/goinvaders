@@ -59,7 +59,7 @@ func NewPlayer() *Player {
 	player.orientation = down
 	player.updateAnimation()
 
-	player.Position = &vec2.T{255, 420}
+	player.Position = &vec2.T{955, 720}
 	player.ImageScale = 1.5
 	player.HitboxSize = vec2.New(64, 48)
 
