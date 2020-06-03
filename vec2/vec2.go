@@ -44,6 +44,11 @@ func (t *T) Coords() (float64, float64) {
 	return t.X, t.Y
 }
 
+func (t *T) Set(x, y float64) {
+	t.X = x
+	t.Y = y
+}
+
 func (t *T) Copy() *T {
 	p := *t
 	return &p
