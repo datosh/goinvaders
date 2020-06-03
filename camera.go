@@ -8,19 +8,19 @@ import (
 )
 
 type Camera struct {
-	screenSize  *vec2.T
+	viewPort    *vec2.T
 	position    *vec2.T
 	zoom        *vec2.T
 	rotation    float64
 	worldMatrix ebiten.GeoM
 }
 
-func NewCamera(screenSize *vec2.T) *Camera {
+func NewCamera(viewPort *vec2.T) *Camera {
 	cam := &Camera{
-		screenSize: screenSize,
-		position:   vec2.New(0, 0),
-		zoom:       vec2.New(1, 1),
-		rotation:   0,
+		viewPort: viewPort,
+		position: vec2.New(0, 0),
+		zoom:     vec2.New(1, 1),
+		rotation: 0,
 	}
 	cam.updateMatrix()
 	return cam
@@ -28,14 +28,14 @@ func NewCamera(screenSize *vec2.T) *Camera {
 
 func (c *Camera) String() string {
 	return fmt.Sprintf(
-		"T: %.2f, R: %.2f, S: %.2f, Size: %.2f",
-		c.position, c.rotation, c.zoom, c.screenSize,
+		"T: %.2f, R: %.2f, S: %.2f, ViewPort: %.2f",
+		c.position, c.rotation, c.zoom, c.viewPort,
 	)
 }
 
 func (c *Camera) updateMatrix() {
 	c.worldMatrix.Reset()
-	screenCenter := c.screenSize.Muled(0.5)
+	screenCenter := c.viewPort.Muled(0.5)
 	// First, move to center of screen, so our focal point is there,
 	// not in top left corner. Then it is Translate * Rotate * Scale,
 	// and move back to top left center
@@ -47,7 +47,7 @@ func (c *Camera) updateMatrix() {
 	c.worldMatrix.Translate(screenCenter.Coords())
 }
 
-func (c *Camera) View(world, screen *ebiten.Image) error {
+func (c *Camera) Render(world, screen *ebiten.Image) error {
 	return screen.DrawImage(world, &ebiten.DrawImageOptions{
 		GeoM: c.worldMatrix,
 	})

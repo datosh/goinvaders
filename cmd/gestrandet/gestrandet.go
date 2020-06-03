@@ -54,11 +54,11 @@ func (si *Gestrandet) Update(screen *ebiten.Image) error {
 }
 
 func (si *Gestrandet) Draw(screen *ebiten.Image) {
-	screen.Fill(color.RGBA{21, 12, 37, 255})
+	si.world.Fill(color.RGBA{21, 12, 37, 255})
 	si.m.Draw(si.world)
 	si.player.Draw(si.world)
+	si.camera.Render(si.world, screen)
 
-	si.camera.View(si.world, screen)
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %v, FPS: %v", ebiten.CurrentTPS(), ebiten.CurrentFPS()))
 	ebitenutil.DebugPrintAt(screen, si.camera.String(), 0, 20)
 	mouseInfo := fmt.Sprintf(
