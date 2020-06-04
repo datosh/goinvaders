@@ -81,6 +81,12 @@ func (entity *Entity) Draw(screen *ebiten.Image) {
 	}
 }
 
+// Center provides the middle point of this entity (image)
+func (entity *Entity) Center() *vec2.T {
+	halfImageSize := vec2.NewI(entity.Image.Size()).AsT().Mul(0.5)
+	return entity.Position.Added(halfImageSize).Add(entity.ImageOffset)
+}
+
 // Hitbox returns entities hitbox, which is based on players position, as well
 // as hitbox offset and size
 func (entity *Entity) Hitbox() *vec2.Rect {

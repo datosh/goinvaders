@@ -33,18 +33,21 @@ func (c *Camera) String() string {
 	)
 }
 
+func (c *Camera) viewportCenter() *vec2.T {
+	return c.viewPort.Muled(0.5)
+}
+
 func (c *Camera) updateMatrix() {
 	c.worldMatrix.Reset()
-	screenCenter := c.viewPort.Muled(0.5)
 	// First, move to center of screen, so our focal point is there,
 	// not in top left corner. Then it is Translate * Rotate * Scale,
 	// and move back to top left center
 	// cf. https://gamedev.stackexchange.com/a/16721
 	c.worldMatrix.Translate(c.position.Inverted().Coords())
-	c.worldMatrix.Translate(screenCenter.Inverted().Coords())
+	c.worldMatrix.Translate(c.viewportCenter().Inverted().Coords())
 	c.worldMatrix.Scale(c.zoom.Coords())
 	c.worldMatrix.Rotate(c.rotation)
-	c.worldMatrix.Translate(screenCenter.Coords())
+	c.worldMatrix.Translate(c.viewportCenter().Coords())
 }
 
 func (c *Camera) Render(world, screen *ebiten.Image) error {
@@ -70,6 +73,11 @@ func (c *Camera) Move(delta *vec2.T) {
 
 func (c *Camera) MoveTo(pos *vec2.T) {
 	c.position = pos.Copy()
+	c.updateMatrix()
+}
+
+func (c *Camera) FocusOn(pos *vec2.T) {
+	c.position = pos.Copy().Sub(c.viewportCenter())
 	c.updateMatrix()
 }
 
