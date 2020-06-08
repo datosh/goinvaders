@@ -90,7 +90,7 @@ func NewSpaceinvaders() *Spaceinvaders {
 	for i := 0; i < 15; i++ {
 		spaceinvaders.stars = append(
 			spaceinvaders.stars,
-			NewStar(NewStarAnimation()),
+			NewStar(NewStarAnimation(), spaceinvaders),
 		)
 	}
 

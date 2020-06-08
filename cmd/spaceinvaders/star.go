@@ -16,6 +16,7 @@ const (
 type Star struct {
 	*engine.Entity
 	animation *engine.Animation
+	game      ebiten.Game
 }
 
 func NewStarAnimation() *engine.Animation {
@@ -31,17 +32,18 @@ func NewStarAnimation() *engine.Animation {
 	)
 }
 
-func NewStar(animation *engine.Animation) *Star {
+func NewStar(animation *engine.Animation, game ebiten.Game) *Star {
 	star := &Star{
 		Entity: engine.NewEntity(),
+		game:   game,
 	}
 	star.animation = animation
 	star.Image = star.animation.CurrentImage()
-	ChangeStarLocation(star)
+	star.randomLocation()
 
 	go func() {
 		for range time.Tick(starAnimationDuration * 5) {
-			ChangeStarLocation(star)
+			star.randomLocation()
 		}
 	}()
 
@@ -55,9 +57,9 @@ func (s *Star) Update(screen *ebiten.Image) error {
 	return nil
 }
 
-func ChangeStarLocation(star *Star) {
-	windowWidth, windowHeight := ebiten.WindowSize()
-	star.Position = vec2.NewI(
+func (s *Star) randomLocation() {
+	windowWidth, windowHeight := s.game.Layout(0, 0)
+	s.Position = vec2.NewI(
 		rand.Intn(windowWidth),
 		rand.Intn(windowHeight),
 	).AsT()
