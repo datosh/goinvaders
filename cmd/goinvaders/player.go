@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"engine"
+	"engine/util"
 	"engine/vec2"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -62,7 +63,7 @@ func (p *Player) Update() error {
 		projectile.Update()
 	}
 
-	p.projectiles = engine.Filter(p.projectiles, isAlive).([]*Projectile)
+	p.projectiles = util.Filter(p.projectiles, func(p *Projectile) bool { return p.Alive })
 
 	return nil
 }

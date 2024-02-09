@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"engine"
+	"engine/util"
 	"engine/vec2"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -125,14 +126,5 @@ func (ec *EnemyController) Draw(screen *ebiten.Image) {
 }
 
 func (ec *EnemyController) RemoveDead() {
-	ec.Enemies = engine.Filter(ec.Enemies, isAlive).([]*Enemy)
-}
-
-type Killable interface {
-	Dead() bool
-}
-
-func isAlive(elem interface{}) bool {
-	entity := elem.(Killable)
-	return !entity.Dead()
+	ec.Enemies = util.Filter(ec.Enemies, func(e *Enemy) bool { return e.Alive })
 }
