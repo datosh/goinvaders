@@ -1,12 +1,13 @@
 package main
 
 import (
-	"engine"
-	"engine/vec2"
 	"time"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/audio"
+	"engine"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 )
 
 type Player struct {
@@ -26,23 +27,23 @@ func NewPlayer() *Player {
 		speed:                   4,
 		fireOnCooldown:          false,
 		fireCooldown:            time.Second / 3,
-		fireSound:               assetLoader.LoadAudioPlayer("/audio/pew.mp3"),
+		fireSound:               assetLoader.LoadAudioPlayer("assets/audio/pew.mp3"),
 		fireProjectileDirection: vec2.UY().Mul(5).Invert(),
 	}
 	player.fireSound.SetVolume(0.2)
 	player.Image = assetLoader.LoadSubImage(
-		"/img/spritemap.png",
-		engine.CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 3}),
+		"assets/img/spritemap.png",
+		engine.CoordinatesToBounds(vec2.I{X: 64, Y: 48}, vec2.I{X: 2, Y: 3}),
 	)
-	player.Position = &vec2.T{255, 420}
+	player.Position = &vec2.T{X: 255, Y: 420}
 	player.ImageScale = 1.2
 	player.HitboxSize = vec2.New(64, 48)
 
 	return player
 }
 
-func (p *Player) Update(screen *ebiten.Image) error {
-	p.Entity.Update(screen)
+func (p *Player) Update() error {
+	p.Entity.Update()
 
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
 		p.Position.Add(vec2.UX().Mul(p.speed).Invert())
@@ -58,7 +59,7 @@ func (p *Player) Update(screen *ebiten.Image) error {
 	}
 
 	for _, projectile := range p.projectiles {
-		projectile.Update(screen)
+		projectile.Update()
 	}
 
 	p.projectiles = engine.Filter(p.projectiles, isAlive).([]*Projectile)

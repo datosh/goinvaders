@@ -1,19 +1,19 @@
 package engine
 
 import (
-	"engine/vec2"
 	"image/color"
 
-	"github.com/hajimehoshi/ebiten"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 // DrawRect draws a one pixel wide border of the rectangle specified by
 // `bounds` on `img`.
 func DrawRect(img *ebiten.Image, bounds vec2.Rect, clr color.Color) {
-	rectImg, _ := ebiten.NewImage(
+	rectImg := ebiten.NewImage(
 		int(bounds.Width()),
 		int(bounds.Height()),
-		ebiten.FilterDefault,
 	)
 	for x := 0; x < int(bounds.Width()); x++ {
 		rectImg.Set(x, 0, clr)
@@ -23,7 +23,8 @@ func DrawRect(img *ebiten.Image, bounds vec2.Rect, clr color.Color) {
 		rectImg.Set(0, y, clr)
 		rectImg.Set(int(bounds.Width())-1, y, clr)
 	}
-	img.DrawImage(rectImg, &ebiten.DrawImageOptions{
-		GeoM: ebiten.TranslateGeo(bounds.X(), bounds.Y()),
-	})
+
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(bounds.X(), bounds.Y())
+	img.DrawImage(rectImg, op)
 }

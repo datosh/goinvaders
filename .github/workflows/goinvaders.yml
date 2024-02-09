@@ -1,0 +1,38 @@
+name: goinvaders
+
+on: [push, workflow_dispatch]
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Install Ebiten dependencies
+      run: |
+        sudo apt-get install -y \
+          libc6-dev libgl1-mesa-dev libxcursor-dev \
+          libxi-dev libxinerama-dev libxrandr-dev \
+          libxxf86vm-dev libasound2-dev pkg-config
+    - name: Checkout code
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+    - name: Setup Go
+      uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+      with:
+        go-version-file: 'go.mod'
+    - name: Test
+      run: go test ./...
+    - name: Build
+      run: |
+        GOOS=linux   GOARCH=amd64 go build -o goinvaders      ./cmd/goinvaders/
+        GOOS=windows GOARCH=amd64 go build -o goinvaders.exe  ./cmd/goinvaders/
+        GOOS=js      GOARCH=wasm  go build -o goinvaders.wasm ./cmd/goinvaders/
+        # Required to run the wasm file in the browser.
+        cp $(go env GOROOT)/misc/wasm/wasm_exec.js wasm_exec.js
+    - name: Upload
+      uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+      with:
+        name: games
+        path: |
+          goinvaders
+          goinvaders.exe
+          goinvaders.wasm
+          wasm_exec.js

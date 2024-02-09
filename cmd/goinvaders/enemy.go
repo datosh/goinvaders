@@ -1,13 +1,13 @@
 package main
 
 import (
-	"engine"
-	"engine/vec2"
 	"log"
 	"time"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/audio"
+	"engine"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2/audio"
 )
 
 type EnemyType int
@@ -26,7 +26,7 @@ type Enemy struct {
 
 func newEnemy1Animation() *engine.Animation {
 	return engine.NewAnimation(
-		assetLoader.LoadImage("/img/spritemap.png"),
+		assetLoader.LoadImage("assets/img/spritemap.png"),
 		vec2.I{X: 64, Y: 48},
 		[]vec2.I{{X: 0, Y: 0}, {X: 1, Y: 0}},
 		[]time.Duration{time.Millisecond * 500, time.Millisecond * 500},
@@ -35,7 +35,7 @@ func newEnemy1Animation() *engine.Animation {
 
 func newEnemy2Animation() *engine.Animation {
 	return engine.NewAnimation(
-		assetLoader.LoadImage("/img/spritemap.png"),
+		assetLoader.LoadImage("assets/img/spritemap.png"),
 		vec2.I{X: 64, Y: 48},
 		[]vec2.I{{X: 3, Y: 0}, {X: 2, Y: 0}},
 		[]time.Duration{time.Millisecond * 500, time.Millisecond * 500},
@@ -45,7 +45,7 @@ func newEnemy2Animation() *engine.Animation {
 func NewEnemy(position *vec2.T, enemyType EnemyType) *Enemy {
 	enemy := &Enemy{
 		Entity:    engine.NewEntity(),
-		hitAudio:  assetLoader.LoadAudioPlayer("/audio/au.mp3"),
+		hitAudio:  assetLoader.LoadAudioPlayer("assets/audio/au.mp3"),
 		hitPoints: 3,
 	}
 
@@ -64,9 +64,9 @@ func NewEnemy(position *vec2.T, enemyType EnemyType) *Enemy {
 	return enemy
 }
 
-func (e *Enemy) Update(screen *ebiten.Image) error {
-	e.Entity.Update(screen)
-	e.animation.Update(screen)
+func (e *Enemy) Update() error {
+	e.Entity.Update()
+	e.animation.Update()
 	e.Image = e.animation.CurrentImage()
 	return nil
 }

@@ -1,13 +1,14 @@
 package main
 
 import (
-	"engine"
-	"engine/vec2"
 	"fmt"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/ebitenutil"
-	"github.com/hajimehoshi/ebiten/inpututil"
+	"engine"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 type Gestrandet struct {
@@ -18,11 +19,11 @@ type Gestrandet struct {
 	camera   *engine.Camera
 }
 
-func (si *Gestrandet) Update(screen *ebiten.Image) error {
+func (si *Gestrandet) Update() error {
 	if si.gameOver || ebiten.IsKeyPressed(ebiten.KeyQ) {
 		return fmt.Errorf("Game Over")
 	}
-	si.player.Update(screen)
+	si.player.Update()
 	si.camera.FocusOn(si.player.Center())
 
 	if ebiten.IsKeyPressed(ebiten.KeyL) {

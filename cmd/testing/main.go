@@ -1,32 +1,27 @@
-//go:generate statik -src=assets -include=*.png,*.mp3,*.ttf
-
 package main
 
 import (
-	"engine"
+	"embed"
 	"image/color"
-
-	_ "engine/cmd/testing/statik"
-	"engine/vec2"
-
 	"log"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/text"
-	"github.com/rakyll/statik/fs"
+	"engine"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font"
 )
 
 var (
+	//go:embed assets/img/*.png
+	//go:embed assets/ttf/*.ttf
+	assstFS     embed.FS
 	assetLoader *engine.AssetLoader
 )
 
 func init() {
-	statikFS, err := fs.New()
-	if err != nil {
-		log.Fatal(err)
-	}
-	assetLoader = engine.NewAssetLoader(statikFS)
+	assetLoader = engine.NewAssetLoader(assstFS)
 }
 
 func main() {
@@ -41,8 +36,8 @@ type Game struct {
 	spaceship *Spaceship
 }
 
-func (g *Game) Update(screen *ebiten.Image) error {
-	g.spaceship.Update(screen)
+func (g *Game) Update() error {
+	g.spaceship.Update()
 	return nil
 }
 
@@ -64,16 +59,16 @@ func NewSpaceship() *Spaceship {
 		Entity: engine.NewEntity(),
 	}
 	spaceship.Image = assetLoader.LoadSubImage(
-		"/img/spritemap.png",
+		"assets/img/spritemap.png",
 		engine.CoordinatesToBounds(
-			vec2.I{64, 48},
-			vec2.I{2, 3},
+			vec2.I{X: 64, Y: 48},
+			vec2.I{X: 2, Y: 3},
 		),
 	)
-	spaceship.nameFont = assetLoader.LoadFont("/ttf/Orbitron.ttf", 12)
-	spaceship.Position = &vec2.T{200, 200}
-	spaceship.HitboxSize = &vec2.T{51, 51}
-	spaceship.HitboxOffset = &vec2.T{6, -3}
+	spaceship.nameFont = assetLoader.LoadFont("assets/ttf/Orbitron.ttf", 12)
+	spaceship.Position = &vec2.T{X: 200, Y: 200}
+	spaceship.HitboxSize = &vec2.T{X: 51, Y: 51}
+	spaceship.HitboxOffset = &vec2.T{X: 6, Y: -3}
 	return spaceship
 }
 
@@ -87,8 +82,8 @@ func (s *Spaceship) Draw(screen *ebiten.Image) {
 	)
 }
 
-func (s *Spaceship) Update(screen *ebiten.Image) error {
-	s.Entity.Update(screen)
+func (s *Spaceship) Update() error {
+	s.Entity.Update()
 
 	// Change Position
 	if ebiten.IsKeyPressed(ebiten.KeyA) {

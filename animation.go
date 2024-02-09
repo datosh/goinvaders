@@ -1,12 +1,13 @@
 package engine
 
 import (
-	"engine/vec2"
 	"image"
 	"log"
 	"time"
 
-	"github.com/hajimehoshi/ebiten"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 // Animation provides logic to generate an animation from a single sprite sheet.
@@ -50,7 +51,7 @@ func NewAnimation(spritesheet *ebiten.Image, tileSize vec2.I, tiles []vec2.I, de
 }
 
 // Update needs to be called regularly so that animation progresses.
-func (anim *Animation) Update(*ebiten.Image) {
+func (anim *Animation) Update() {
 	if anim.paused {
 		return
 	}

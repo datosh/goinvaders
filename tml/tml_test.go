@@ -1,18 +1,15 @@
 package tml
 
 import (
-	"net/http"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	TestFilesDir = http.Dir("../testfiles")
-)
+var TestFilesDir = os.DirFS("../testfiles")
 
 func TestNewTiledMap(t *testing.T) {
-
 	t.Run("Basic Checks", func(t *testing.T) {
 		dto := NewTiledMap("testmap.json", TestFilesDir)
 
@@ -26,7 +23,6 @@ func TestNewTiledMap(t *testing.T) {
 		dto := NewTiledMap("xxxxx.json", TestFilesDir)
 		assert.Nil(t, dto)
 	})
-
 }
 
 // func TestGenerate(t *testing.T) {

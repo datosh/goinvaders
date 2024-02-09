@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	//go:embed assets/**/*.png
+	//go:embed assets/audio/*.mp3
+	//go:embed assets/img/*.png
 	//go:embed assets/ttf/*.ttf
-	//go:embed assets/config/levels/*.json
 	assetFS     embed.FS
 	assetLoader *engine.AssetLoader
 )
@@ -21,9 +21,9 @@ func init() {
 }
 
 func main() {
-	ebiten.SetFullscreen(true)
-	ebiten.SetWindowTitle("Gestrandet")
-	if err := ebiten.RunGame(NewGestrandet()); err != nil {
+	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowTitle("Spaceinvaders")
+	if err := ebiten.RunGame(NewSpaceinvaders()); err != nil {
 		log.Fatal(err)
 	}
 }

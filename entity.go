@@ -1,11 +1,12 @@
 package engine
 
 import (
-	"engine/vec2"
 	"image/color"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/inpututil"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 // Entity is basis for all entities in the game
@@ -46,7 +47,7 @@ func (entity *Entity) ImageRect() vec2.Rect {
 }
 
 // Update should be called in game loop
-func (entity *Entity) Update(screen *ebiten.Image) error {
+func (entity *Entity) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyF10) {
 		entity.ToggleDebug()
 	}

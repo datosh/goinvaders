@@ -1,11 +1,12 @@
 package main
 
 import (
-	"engine"
-	"engine/vec2"
 	"time"
 
-	"github.com/hajimehoshi/ebiten"
+	"engine"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type orientation int
@@ -30,44 +31,44 @@ func NewPlayer() *Player {
 		speed:  2.3,
 	}
 
-	spritesheet := assetLoader.LoadImage("/img/Character Spritemap.png")
+	spritesheet := assetLoader.LoadImage("assets/img/Character Spritemap.png")
 	player.walkAnimations[down] = engine.NewAnimation(
 		spritesheet,
-		vec2.I{40, 56},
-		[]vec2.I{{0, 0}, {1, 0}, {2, 0}, {3, 0}},
+		vec2.I{X: 40, Y: 56},
+		[]vec2.I{{X: 0, Y: 0}, {X: 1, Y: 0}, {X: 2, Y: 0}, {X: 3, Y: 0}},
 		engine.UniformDuration(time.Millisecond*200, 4),
 	)
 	player.walkAnimations[right] = engine.NewAnimation(
 		spritesheet,
-		vec2.I{40, 56},
-		[]vec2.I{{0, 1}, {1, 1}, {2, 1}, {3, 1}},
+		vec2.I{X: 40, Y: 56},
+		[]vec2.I{{X: 0, Y: 1}, {X: 1, Y: 1}, {X: 2, Y: 1}, {X: 3, Y: 1}},
 		engine.UniformDuration(time.Millisecond*200, 4),
 	)
 	player.walkAnimations[left] = engine.NewAnimation(
 		spritesheet,
-		vec2.I{40, 56},
-		[]vec2.I{{0, 2}, {1, 2}, {2, 2}, {3, 2}},
+		vec2.I{X: 40, Y: 56},
+		[]vec2.I{{X: 0, Y: 2}, {X: 1, Y: 2}, {X: 2, Y: 2}, {X: 3, Y: 2}},
 		engine.UniformDuration(time.Millisecond*200, 4),
 	)
 	player.walkAnimations[up] = engine.NewAnimation(
 		spritesheet,
-		vec2.I{40, 56},
-		[]vec2.I{{0, 3}, {1, 3}, {2, 3}, {3, 3}},
+		vec2.I{X: 40, Y: 56},
+		[]vec2.I{{X: 0, Y: 3}, {X: 1, Y: 3}, {X: 2, Y: 3}, {X: 3, Y: 3}},
 		engine.UniformDuration(time.Millisecond*200, 4),
 	)
 
 	player.orientation = down
 	player.updateAnimation()
 
-	player.Position = &vec2.T{955, 720}
+	player.Position = &vec2.T{X: 955, Y: 720}
 	player.ImageScale = 1.5
 	player.HitboxSize = vec2.New(64, 48)
 
 	return player
 }
 
-func (p *Player) Update(screen *ebiten.Image) error {
-	p.Entity.Update(screen)
+func (p *Player) Update() error {
+	p.Entity.Update()
 	p.updateAnimation()
 
 	direction := vec2.New(0, 0)
@@ -106,6 +107,6 @@ func (p *Player) Draw(screen *ebiten.Image) {
 }
 
 func (p *Player) updateAnimation() {
-	p.walkAnimations[p.orientation].Update(nil)
+	p.walkAnimations[p.orientation].Update()
 	p.Image = p.walkAnimations[p.orientation].CurrentImage()
 }

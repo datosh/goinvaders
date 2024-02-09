@@ -1,10 +1,11 @@
 package engine
 
 import (
-	"engine/vec2"
 	"fmt"
 
-	"github.com/hajimehoshi/ebiten"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Camera struct {
@@ -50,8 +51,8 @@ func (c *Camera) updateMatrix() {
 	c.worldMatrix.Translate(c.viewportCenter().Coords())
 }
 
-func (c *Camera) Render(world, screen *ebiten.Image) error {
-	return screen.DrawImage(world, &ebiten.DrawImageOptions{
+func (c *Camera) Render(world, screen *ebiten.Image) {
+	screen.DrawImage(world, &ebiten.DrawImageOptions{
 		GeoM: c.worldMatrix,
 	})
 }

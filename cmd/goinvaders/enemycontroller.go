@@ -1,12 +1,13 @@
 package main
 
 import (
-	"engine"
-	"engine/vec2"
 	"math/rand"
 	"time"
 
-	"github.com/hajimehoshi/ebiten"
+	"engine"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type EnemyController struct {
@@ -58,15 +59,15 @@ func (ec *EnemyController) CollideWith(projectile *Projectile) {
 	}
 }
 
-func (ec *EnemyController) Update(screen *ebiten.Image) error {
-	ec.Entity.Update(screen)
+func (ec *EnemyController) Update() error {
+	ec.Entity.Update()
 
 	for _, enemy := range ec.Enemies {
-		enemy.Update(screen)
+		enemy.Update()
 	}
 
 	for _, projectile := range ec.projectiles {
-		projectile.Update(screen)
+		projectile.Update()
 	}
 
 	// Do we make the nex step?

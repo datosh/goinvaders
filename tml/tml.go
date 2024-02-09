@@ -7,12 +7,13 @@ package tml
 
 import (
 	"encoding/json"
-	"engine"
+	"io/fs"
 	"log"
-	"net/http"
 	"path/filepath"
 
-	"github.com/hajimehoshi/ebiten"
+	"engine"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type TiledMap struct {
@@ -40,7 +41,7 @@ type TiledMap struct {
 	offsetTable map[int]*ebiten.Image
 }
 
-func NewTiledMap(path string, fs http.FileSystem) *TiledMap {
+func NewTiledMap(path string, fs fs.FS) *TiledMap {
 	f, err := fs.Open(path)
 	if err != nil {
 		log.Printf("Unable to open %v", err)
@@ -65,15 +66,10 @@ func NewTiledMap(path string, fs http.FileSystem) *TiledMap {
 }
 
 func (tm *TiledMap) Generate() *ebiten.Image {
-	img, err := ebiten.NewImage(
+	img := ebiten.NewImage(
 		tm.Width*tm.TileWidth,
 		tm.Height*tm.TileHeight,
-		ebiten.FilterDefault,
 	)
-	if err != nil {
-		log.Printf("Error creating new image for map: %v", err)
-		return nil
-	}
 
 	for idx, tileType := range tm.Layers[0].Data {
 		xPos := (idx % tm.Width) * tm.TileWidth

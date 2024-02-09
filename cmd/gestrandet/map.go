@@ -1,10 +1,11 @@
 package main
 
 import (
-	"engine/tml"
-	"net/http"
+	"os"
 
-	"github.com/hajimehoshi/ebiten"
+	"engine/tml"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Map struct {
@@ -14,7 +15,7 @@ type Map struct {
 
 func NewMap() *Map {
 	m := &Map{
-		mapLoader: tml.NewTiledMap("config/levels/gestrandet.json", http.Dir("assets")),
+		mapLoader: tml.NewTiledMap("config/levels/gestrandet.json", os.DirFS("assets")),
 	}
 	m.image = m.mapLoader.Generate()
 	return m

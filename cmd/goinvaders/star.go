@@ -1,12 +1,13 @@
 package main
 
 import (
-	"engine"
-	"engine/vec2"
 	"math/rand"
 	"time"
 
-	"github.com/hajimehoshi/ebiten"
+	"engine"
+	"engine/vec2"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 const (
@@ -21,10 +22,10 @@ type Star struct {
 
 func NewStarAnimation() *engine.Animation {
 	return engine.NewAnimation(
-		assetLoader.LoadImage("/img/Stern.png"),
-		vec2.I{32, 32},
+		assetLoader.LoadImage("assets/img/Stern.png"),
+		vec2.I{X: 32, Y: 32},
 		[]vec2.I{
-			{0, 0}, {1, 0}, {2, 0},
+			{X: 0, Y: 0}, {X: 1, Y: 0}, {X: 2, Y: 0},
 		},
 		[]time.Duration{
 			starAnimationDuration, starAnimationDuration, starAnimationDuration,
@@ -50,9 +51,9 @@ func NewStar(animation *engine.Animation, game ebiten.Game) *Star {
 	return star
 }
 
-func (s *Star) Update(screen *ebiten.Image) error {
-	s.Entity.Update(screen)
-	s.animation.Update(screen)
+func (s *Star) Update() error {
+	s.Entity.Update()
+	s.animation.Update()
 	s.Image = s.animation.CurrentImage()
 	return nil
 }

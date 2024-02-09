@@ -5,8 +5,8 @@ import (
 	"engine/vec2"
 	"fmt"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/text"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/colornames"
 	"golang.org/x/image/font"
 )
@@ -23,7 +23,7 @@ func NewScore() *Score {
 		Entity:       engine.NewEntity(),
 		currentScore: 0,
 		currentLevel: 1,
-		face:         assetLoader.LoadFont("/ttf/Orbitron.ttf", 14),
+		face:         assetLoader.LoadFont("assets/ttf/Orbitron.ttf", 14),
 	}
 	score.Position.Add(vec2.New(10, 15))
 

@@ -4,7 +4,7 @@ import (
 	"engine"
 	"engine/vec2"
 
-	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Projectile struct {
@@ -18,8 +18,8 @@ func NewProjectile(position, direction *vec2.T) *Projectile {
 		Direction: direction,
 	}
 	projectile.Image = assetLoader.LoadSubImage(
-		"/img/spritemap.png",
-		engine.CoordinatesToBounds(vec2.I{64, 48}, vec2.I{2, 2}),
+		"assets/img/spritemap.png",
+		engine.CoordinatesToBounds(vec2.I{X: 64, Y: 48}, vec2.I{X: 2, Y: 2}),
 	)
 	projectile.Position = position
 	projectile.ImageScale = 0.25
@@ -28,8 +28,8 @@ func NewProjectile(position, direction *vec2.T) *Projectile {
 	return projectile
 }
 
-func (p *Projectile) Update(screen *ebiten.Image) error {
-	p.Entity.Update(screen)
+func (p *Projectile) Update() error {
+	p.Entity.Update()
 	p.Position.Add(p.Direction)
 	return nil
 }

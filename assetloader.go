@@ -2,19 +2,18 @@ package engine
 
 import (
 	"image"
-	"io/ioutil"
+	_ "image/png"
+	"io"
+	"io/fs"
 	"log"
-	"net/http"
 
 	// Required for loading PNG images
-	_ "image/png"
-
 	"engine/vec2"
 
 	"github.com/golang/freetype/truetype"
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/audio"
-	"github.com/hajimehoshi/ebiten/audio/mp3"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 	"golang.org/x/image/font"
 )
 
@@ -22,30 +21,24 @@ const (
 	sampleRate = 48000
 )
 
-var (
-	// audioContext can only be initialized once, as documented in
-	// audio.NewContext. Therefore we make it a singleton for this file.
-	audioContext *audio.Context = nil
-)
+// audioContext can only be initialized once, as documented in
+// audio.NewContext. Therefore we make it a singleton for this file.
+var audioContext *audio.Context = nil
 
 // AssetLoader can be used with any FileSystem, and provides helper functions
 // to load images (png), sound (mp3), and font (ttf) files.
 type AssetLoader struct {
-	fs http.FileSystem
+	fileSystem fs.FS
 }
 
 // NewAssetLoader creates a new asset loader using the specified file system.
-func NewAssetLoader(fs http.FileSystem) *AssetLoader {
+func NewAssetLoader(fs fs.FS) *AssetLoader {
 	assetLoader := &AssetLoader{
-		fs: fs,
+		fileSystem: fs,
 	}
 
 	if audioContext == nil {
-		var err error
-		audioContext, err = audio.NewContext(sampleRate)
-		if err != nil {
-			log.Panicf("Error initializing audio context: %v", err)
-		}
+		audioContext = audio.NewContext(sampleRate)
 	}
 
 	return assetLoader
@@ -53,7 +46,7 @@ func NewAssetLoader(fs http.FileSystem) *AssetLoader {
 
 // LoadImage from embedded filesystem.
 func (loader *AssetLoader) LoadImage(path string) *ebiten.Image {
-	file, err := loader.fs.Open(path)
+	file, err := loader.fileSystem.Open(path)
 	if err != nil {
 		log.Println(err)
 		return nil
@@ -68,12 +61,7 @@ func (loader *AssetLoader) LoadImage(path string) *ebiten.Image {
 		return nil
 	}
 
-	img2, err := ebiten.NewImageFromImage(img, ebiten.FilterDefault)
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
-	return img2
+	return ebiten.NewImageFromImage(img)
 }
 
 // LoadSubImage uses `LoadImage` to load an image,
@@ -93,15 +81,15 @@ func CoordinatesToBounds(tileSize vec2.I, coordinates vec2.I) image.Rectangle {
 }
 
 // LoadAudioPlayer created a new audio player for the specified audio file,
-// which is loaded from embedded (statik) assets.
+// which is loaded from embedded assets.
 func (loader *AssetLoader) LoadAudioPlayer(path string) *audio.Player {
-	f, err := loader.fs.Open(path)
+	f, err := loader.fileSystem.Open(path)
 	if err != nil {
 		log.Panicf("Error opening audio file: %v", err)
 		return nil
 	}
 
-	m, err := mp3.Decode(audioContext, f)
+	m, err := mp3.Decode(audioContext, f.(io.ReadSeekCloser))
 	if err != nil {
 		log.Panicf("Error decoding: %v", err)
 	}
@@ -115,7 +103,7 @@ func (loader *AssetLoader) LoadAudioPlayer(path string) *audio.Player {
 
 // LoadFont loads font location at path with size in pixel.
 func (loader *AssetLoader) LoadFont(path string, size float64) font.Face {
-	ttfFile, err := loader.fs.Open(path)
+	ttfFile, err := loader.fileSystem.Open(path)
 	if err != nil {
 		log.Panicf("Error opening ttf file: %v", err)
 	}
@@ -126,7 +114,7 @@ func (loader *AssetLoader) LoadFont(path string, size float64) font.Face {
 		}
 	}()
 
-	fontBytes, err := ioutil.ReadAll(ttfFile)
+	fontBytes, err := io.ReadAll(ttfFile)
 	if err != nil {
 		log.Panicf("Error reading from ttfFile: %v", err)
 	}

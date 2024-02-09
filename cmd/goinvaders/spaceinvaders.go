@@ -3,8 +3,8 @@ package main
 import (
 	"image/color"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/text"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 type Spaceinvaders struct {
@@ -17,14 +17,14 @@ type Spaceinvaders struct {
 	gameOver        bool
 }
 
-func (si *Spaceinvaders) Update(screen *ebiten.Image) error {
+func (si *Spaceinvaders) Update() error {
 	if si.gameOver {
 		return nil
 	}
 
-	si.player.Update(screen)
-	si.enemyController.Update(screen)
-	si.score.Update(screen)
+	si.player.Update()
+	si.enemyController.Update()
+	si.score.Update()
 
 	for _, projectile := range si.player.projectiles {
 		si.enemyController.CollideWith(projectile)
@@ -36,7 +36,7 @@ func (si *Spaceinvaders) Update(screen *ebiten.Image) error {
 	}
 
 	for _, star := range si.stars {
-		star.Update(screen)
+		star.Update()
 	}
 
 	return nil
@@ -48,7 +48,7 @@ func (si *Spaceinvaders) Draw(screen *ebiten.Image) {
 	if si.gameOver {
 		text.Draw(
 			screen, "GAME OVER",
-			assetLoader.LoadFont("/ttf/Orbitron.ttf", 32),
+			assetLoader.LoadFont("assets/ttf/Orbitron.ttf", 32),
 			180, 220,
 			color.RGBA{255, 0, 0, 255},
 		)

@@ -2,15 +2,13 @@ package engine
 
 import (
 	_ "image/png"
-	"net/http"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	TestFilesDir = http.Dir("testfiles")
-)
+var TestFilesDir = os.DirFS("testfiles")
 
 func TestNewAssetLoader(t *testing.T) {
 	a := NewAssetLoader(TestFilesDir)
