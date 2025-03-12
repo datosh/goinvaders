@@ -15,6 +15,7 @@ type Gestrandet struct {
 	m        *Map
 	gameOver bool
 	player   *Player
+	enemy    *Enemy
 	world    *ebiten.Image
 	camera   *engine.Camera
 }
@@ -24,6 +25,7 @@ func (si *Gestrandet) Update() error {
 		return fmt.Errorf("Game Over")
 	}
 	si.player.Update()
+	si.enemy.Update()
 	si.camera.FocusOn(si.player.Center())
 
 	if ebiten.IsKeyPressed(ebiten.KeyL) {
@@ -50,9 +52,10 @@ func (si *Gestrandet) Update() error {
 func (si *Gestrandet) Draw(screen *ebiten.Image) {
 	si.m.Draw(si.world)
 	si.player.Draw(si.world)
+	si.enemy.Draw(si.world)
 	si.camera.Render(si.world, screen)
 
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %v, FPS: %v", ebiten.CurrentTPS(), ebiten.CurrentFPS()))
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %v, FPS: %v", ebiten.ActualTPS(), ebiten.ActualFPS()))
 	ebitenutil.DebugPrintAt(screen, si.camera.String(), 0, 20)
 	mouseInfo := fmt.Sprintf(
 		"OnScreen: %v, World: %v",
@@ -72,6 +75,7 @@ func NewGestrandet() *Gestrandet {
 		m:        NewMap(),
 		gameOver: false,
 		player:   NewPlayer(),
+		enemy:    NewEnemy(),
 	}
 	gestrandet.camera = engine.NewCamera(vec2.NewI(gestrandet.Layout(0, 0)).AsT())
 	gestrandet.world = gestrandet.m.mapLoader.Generate()

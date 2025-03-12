@@ -29,7 +29,7 @@ func newEnemy1Animation() *engine.Animation {
 		assetLoader.LoadImage("assets/img/spritemap.png"),
 		vec2.I{X: 64, Y: 48},
 		[]vec2.I{{X: 0, Y: 0}, {X: 1, Y: 0}},
-		[]time.Duration{time.Millisecond * 500, time.Millisecond * 500},
+		engine.UniformDuration(time.Millisecond*500, 2),
 	)
 }
 
@@ -38,7 +38,7 @@ func newEnemy2Animation() *engine.Animation {
 		assetLoader.LoadImage("assets/img/spritemap.png"),
 		vec2.I{X: 64, Y: 48},
 		[]vec2.I{{X: 3, Y: 0}, {X: 2, Y: 0}},
-		[]time.Duration{time.Millisecond * 500, time.Millisecond * 500},
+		engine.UniformDuration(time.Millisecond*500, 2),
 	)
 }
 
@@ -60,7 +60,11 @@ func NewEnemy(position *vec2.T, enemyType EnemyType) *Enemy {
 
 	enemy.Image = enemy.animation.CurrentImage()
 	enemy.Position = position
-	enemy.HitboxSize = vec2.NewI(enemy.Image.Size()).AsT()
+	enemy.HitboxSize = vec2.NewI(
+		enemy.Image.Bounds().Size().X,
+		enemy.Image.Bounds().Size().Y,
+	).AsT()
+
 	return enemy
 }
 

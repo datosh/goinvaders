@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+	github.com/google/uuid v1.6.0
 	github.com/hajimehoshi/ebiten/v2 v2.6.5
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/image v0.15.0

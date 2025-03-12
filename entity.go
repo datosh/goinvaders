@@ -38,7 +38,10 @@ func NewEntity() *Entity {
 
 // ImageRect builds destination rectangle of image in world
 func (entity *Entity) ImageRect() vec2.Rect {
-	imageSize := vec2.NewI(entity.Image.Size()).AsT()
+	imageSize := vec2.NewI(
+		entity.Image.Bounds().Size().X,
+		entity.Image.Bounds().Size().Y,
+	).AsT()
 	minPoint := entity.Position.Added(entity.ImageOffset)
 	return vec2.Rect{
 		Min: minPoint,
@@ -84,7 +87,10 @@ func (entity *Entity) Draw(screen *ebiten.Image) {
 
 // Center provides the middle point of this entity (image)
 func (entity *Entity) Center() *vec2.T {
-	halfImageSize := vec2.NewI(entity.Image.Size()).AsT().Mul(0.5)
+	halfImageSize := vec2.NewI(
+		entity.Image.Bounds().Size().X,
+		entity.Image.Bounds().Size().Y,
+	).AsT().Mul(0.5)
 	return entity.Position.Added(halfImageSize).Add(entity.ImageOffset)
 }
 
